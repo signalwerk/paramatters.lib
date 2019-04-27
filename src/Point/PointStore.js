@@ -1,11 +1,10 @@
-import { Map, setIn } from "immutable";
+import { Map } from "immutable";
 import Event from "../Event";
 import { defaultPoint, setAttr, move, scale } from "./PointUtil";
 
 class PointStore {
-  constructor() {
-    this.data = Map({ points: Map() });
-    // this.data = Map();
+  constructor(props) {
+    this.props = props;
     this.eventHandler = new Event();
   }
 
@@ -13,35 +12,35 @@ class PointStore {
     this.eventHandler.on(id, cb);
   }
 
-  update(id, point) {
-    this.data = this.data.mergeDeep({ points: { [id]: point } });
+  set(id, point) {
+    this.props.set(id, point)
   }
 
   get(id) {
-    return this.data.getIn(["points", id]);
+    return this.props.get(id)
   }
 
   addPoint(id) {
     const newPoint = defaultPoint(id);
-    this.update(id, newPoint);
+    this.set(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 
   attrPoint(id, attr) {
     const newPoint = setAttr(this.get(id), attr);
-    this.update(id, newPoint);
+    this.set(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 
   movePoint(id, x, y) {
     const newPoint = move(this.get(id), x, y);
-    this.update(id, newPoint);
+    this.set(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 
   scalePoint(id, x, y) {
     const newPoint = scale(this.get(id), x, y);
-    this.update(id, newPoint);
+    this.set(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 

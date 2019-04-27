@@ -1,4 +1,4 @@
-import ContourStore from "./ContourStore";
+import Store from "../Store";
 import { Map } from "immutable";
 import { uuid } from "../uuid";
 import Child from "../Child";
@@ -6,13 +6,13 @@ import Point from "../Point/Point";
 
 class Contour {
   constructor(...args) {
-    this.store = new ContourStore();
+    this.store = Store;
     this.data = null;
 
     const id = uuid();
-    this.store.register(id, newData => this.onChange(newData));
+    this.store.contours.register(id, newData => this.onChange(newData));
 
-    this.store.reducer("CONTOUR_ADD", {
+    this.store.contours.reducer("CONTOUR_ADD", {
       id
     });
 
@@ -48,7 +48,7 @@ class Contour {
   }
 
   set(obj) {
-    this.store.reducer("CONTOUR_ATTR", {
+    this.store.contours.reducer("CONTOUR_ATTR", {
       id: this.data.get("id"),
       attr: obj
     });

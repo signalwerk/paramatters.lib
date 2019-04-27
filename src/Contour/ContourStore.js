@@ -3,8 +3,8 @@ import { defaultContour, setAttr, move, scale } from "./ContourUtil";
 import Event from "../Event";
 
 class ContourStore {
-  constructor() {
-    this.data = Map({ contours: Map(), points: Map() });
+  constructor(props) {
+    this.props = props;
     this.eventHandler = new Event();
   }
 
@@ -12,23 +12,23 @@ class ContourStore {
     this.eventHandler.on(id, cb);
   }
 
-  update(id, contour) {
-    this.data = this.data.mergeDeep({ contours: { [id]: contour } });
+  set(id, contour) {
+    this.props.set(id, contour);
   }
 
   get(id) {
-    return this.data.getIn(["contours", id]);
+    return this.props.get(id);
   }
 
   addContour(id) {
     const newContour = defaultContour(id);
-    this.update(id, newContour);
+    this.set(id, newContour);
     this.eventHandler.emit(id, newContour);
   }
 
   attrContour(id, attr) {
     const newContour = setAttr(this.get(id), attr);
-    this.update(id, newContour);
+    this.set(id, newContour);
     this.eventHandler.emit(id, newContour);
   }
 

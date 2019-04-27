@@ -1,17 +1,18 @@
-import PointStore from "./PointStore";
+// import PointStore from "./PointStore";
+import Store from "../Store";
 import { Map } from "immutable";
 import { uuid } from "../uuid";
 import { isNumber } from "../util";
 
 class Point {
   constructor(...args) {
-    this.store = new PointStore();
+    this.store = Store;
     this.data = null;
 
     const id = uuid();
-    this.store.register(id, newData => this.onChange(newData));
+    this.store.points.register(id, newData => this.onChange(newData));
 
-    this.store.reducer("POINT_ADD", {
+    this.store.points.reducer("POINT_ADD", {
       id
     });
 
@@ -39,7 +40,7 @@ class Point {
   }
 
   set(obj) {
-    this.store.reducer("POINT_ATTR", {
+    this.store.points.reducer("POINT_ATTR", {
       id: this.data.get("id"),
       attr: obj,
     });
@@ -75,7 +76,7 @@ class Point {
 
   // move the point by xy
   move(x, y) {
-    this.store.reducer("POINT_MOVE", {
+    this.store.points.reducer("POINT_MOVE", {
       id: this.data.get("id"),
       x,
       y
@@ -89,7 +90,7 @@ class Point {
     const x = args[0];
     const y = args[1] || args[0];
 
-    this.store.reducer("POINT_SCALE", {
+    this.store.points.reducer("POINT_SCALE", {
       id: this.data.get("id"),
       x,
       y
