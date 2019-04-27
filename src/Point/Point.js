@@ -1,37 +1,36 @@
-import { List, Map } from "immutable";
 import PointStore from "./PointStore";
-import { uuid } from "./uuid";
-import { isNumber } from "./util";
+import { uuid } from "../uuid";
+import { isNumber } from "../util";
 
 class Point {
-  constructor() {
+  constructor(...args) {
     this.store = new PointStore();
-    this.data = Map({
-      id: uuid()
-    })
-    // this.data.get("id") = uuid();
+    this.data = null;
 
-    this.store.register(this.data.get("id"), newData => this.onChange(newData));
+    const id = uuid();
+    this.store.register(id, newData => this.onChange(newData));
 
     this.store.reducer("POINT_ADD", {
-      id: this.data.get("id")
+      id
     });
 
-    this.init(arguments);
+    return this.init(args);
   }
 
   init(args) {
-
+    // init with new Point({x: 10, y: 20});
     if (args.length === 1) {
       this.set(args[0]);
       return this;
     }
 
-    // init with x/y => new fontcat.point(x, y);
+    // init with x/y => new Point(x, y);
     if (args.length === 2 && isNumber(args[0]) && isNumber(args[1])) {
       this.set({ x: args[0], y: args[1] });
       return this;
     }
+
+    return this;
   }
 
   onChange(newData) {
@@ -39,8 +38,9 @@ class Point {
   }
 
   set(obj) {
+    const newObj = typeof obj.toJS === "function" ? obj.toJS() : obj;
     this.store.reducer("POINT_ATTR", {
-      ...obj,
+      ...newObj,
       id: this.data.get("id")
     });
   }
@@ -54,17 +54,23 @@ class Point {
   }
 
   // get/set methods
-  type() {
-    return this.getset("type", arguments);
+  type(...args) {
+    return this.getset("type", args);
   }
-  x() {
-    return this.getset("x", arguments);
+
+  x(...args) {
+    return this.getset("x", args);
   }
-  y() {
-    return this.getset("y", arguments);
+
+  y(...args) {
+    return this.getset("y", args);
   }
-  id() {
-    return this.getset("id", arguments);
+
+  id(...args) {
+    if (args.length > 0) {
+      throw new Error("point.id() can only be called not set.");
+    }
+    return this.data.get("id");
   }
 
   // move the point by xy
@@ -79,9 +85,9 @@ class Point {
   }
 
   // scale the point by factor
-  scale(scaleFactor) {
-    let x = arguments[0];
-    let y = arguments[1] || arguments[0];
+  scale(...args) {
+    const x = args[0];
+    const y = args[1] || args[0];
 
     this.store.reducer("POINT_SCALE", {
       id: this.data.get("id"),
@@ -90,6 +96,20 @@ class Point {
     });
 
     return this;
+  }
+
+  toString() {
+    return JSON.stringify(this.data);
+  }
+
+  toJS() {
+    return this.data.toJS();
+  }
+
+  // copy a point without the events
+  clone() {
+    const pNew = new Point(this.data);
+    return pNew;
   }
 }
 

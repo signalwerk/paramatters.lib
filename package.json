@@ -25,7 +25,7 @@
     "build": "rollup -c",
     "start": "npm run test:watch",
     "test:watch": "nodemon --watch src --watch tests --exec 'npm test'",
-    "test": "mocha -r reify -r source-map-support/register tests/*.test.js",
+    "test": "mocha -r reify -r source-map-support/register tests/**/*.test.js",
     "prepublishOnly": "npm run build && npm test",
     "test:browser": "npm run build && opn http://127.0.0.1:8080/tests/ && serve -p 8080"
   },
@@ -33,12 +33,7 @@
     "chai": "^4.1.2",
     "eslint": "^5.0.1",
     "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-config-standard": "^12.0.0-alpha.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "immutable": "^4.0.0-rc.12",
+    "eslint-config-prettier": "^4.2.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.17.5",
     "opn-cli": "^3.1.0",
@@ -52,6 +47,7 @@
     "source-map-support": "^0.5.6"
   },
   "dependencies": {
+    "immutable": "^4.0.0-rc.12",
     "chai-uuid": "^1.0.6"
   }
 }
