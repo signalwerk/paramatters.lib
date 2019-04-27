@@ -1,4 +1,5 @@
 import PointStore from "./PointStore";
+import { Map } from "immutable";
 import { uuid } from "../uuid";
 import { isNumber } from "../util";
 
@@ -38,10 +39,9 @@ class Point {
   }
 
   set(obj) {
-    const newObj = typeof obj.toJS === "function" ? obj.toJS() : obj;
     this.store.reducer("POINT_ATTR", {
-      ...newObj,
-      id: this.data.get("id")
+      id: this.data.get("id"),
+      attr: obj,
     });
   }
 
@@ -108,8 +108,7 @@ class Point {
 
   // copy a point without the events
   clone() {
-    const pNew = new Point(this.data);
-    return pNew;
+    return new Point(this.data);
   }
 }
 

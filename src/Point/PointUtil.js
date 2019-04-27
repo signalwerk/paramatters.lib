@@ -42,8 +42,6 @@ export const defaultPoint = id => {
 
 const all = {
   defaultPoint,
-  PointType,
-  setKeys
 };
 
 export default all;

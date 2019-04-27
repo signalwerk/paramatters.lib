@@ -1,10 +1,11 @@
-import { Map } from "immutable";
+import { Map, setIn } from "immutable";
 import Event from "../Event";
 import { defaultPoint, setAttr, move, scale } from "./PointUtil";
 
 class PointStore {
   constructor() {
-    this.data = Map();
+    this.data = Map({ points: Map() });
+    // this.data = Map();
     this.eventHandler = new Event();
   }
 
@@ -12,31 +13,35 @@ class PointStore {
     this.eventHandler.on(id, cb);
   }
 
+  update(id, point) {
+    this.data = this.data.mergeDeep({ points: { [id]: point } });
+  }
+
+  get(id) {
+    return this.data.getIn(["points", id]);
+  }
+
   addPoint(id) {
-    const { data } = this;
     const newPoint = defaultPoint(id);
-    this.data = data.mergeDeep(data, { [id]: newPoint });
+    this.update(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 
-  attrPoint(id, load) {
-    const { data } = this;
-    const newPoint = setAttr(data.get(id), load);
-    this.data = data.mergeDeep(data, { [id]: newPoint });
+  attrPoint(id, attr) {
+    const newPoint = setAttr(this.get(id), attr);
+    this.update(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 
-  movePoint(id, load) {
-    const { data } = this;
-    const newPoint = move(data.get(id), load.x, load.y);
-    this.data = data.mergeDeep(data, { [id]: newPoint });
+  movePoint(id, x, y) {
+    const newPoint = move(this.get(id), x, y);
+    this.update(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 
-  scalePoint(id, load) {
-    const { data } = this;
-    const newPoint = scale(data.get(id), load.x, load.y);
-    this.data = data.mergeDeep(data, { [id]: newPoint });
+  scalePoint(id, x, y) {
+    const newPoint = scale(this.get(id), x, y);
+    this.update(id, newPoint);
     this.eventHandler.emit(id, newPoint);
   }
 
@@ -47,15 +52,15 @@ class PointStore {
         break;
 
       case "POINT_ATTR":
-        this.attrPoint(load.id, load);
+        this.attrPoint(load.id, load.attr);
         break;
 
       case "POINT_MOVE":
-        this.movePoint(load.id, load);
+        this.movePoint(load.id, load.x, load.y);
         break;
 
       case "POINT_SCALE":
-        this.scalePoint(load.id, load);
+        this.scalePoint(load.id, load.x, load.y);
         break;
 
       default: {
