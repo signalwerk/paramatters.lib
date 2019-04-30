@@ -14,6 +14,11 @@ export const setKeys = Set(["x", "y", "type"]);
 
 export const setAttr = (point, attr) => {
   const dataLoad = Map(attr).filter((val, key) => setKeys.has(key)); // pick
+
+  // only if forceId is set we reset the id
+  // if (Map(attr).get("forceId") === true) {
+  //   return point.merge(dataLoad.merge({ id: attr.id }));
+  // }
   return point.merge(dataLoad);
 };
 
@@ -34,6 +39,7 @@ export const scale = (point, x, y) => {
 export const defaultPoint = id => {
   return Map({
     id: id || uuid(),
+    __type: "point",
     x: 0.0,
     y: 0.0,
     type: PointType.none
@@ -41,7 +47,7 @@ export const defaultPoint = id => {
 };
 
 const all = {
-  defaultPoint,
+  defaultPoint
 };
 
 export default all;

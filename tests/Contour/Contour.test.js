@@ -32,13 +32,33 @@ describe("Contour", () => {
   describe("child handling", () => {
     it("should append point to contour", () => {
       const c = new Contour();
-      const p = new Point();
+      const p = new Point(); //.x(3).y(5);
+      // expect(c.points.get().size).to.be.equal(0);
+      p.log = true;
+      p.x(4);
+      expect(p.x()).to.be.equal(4);
+      c.points.push(p);
+      p.x(6);
+      expect(p.x()).to.be.equal(6);
+      // expect(c.points.get().size).to.be.equal(1);
+      // p.x(50);
 
-      // console.log("----", c.points.get())
-      // expect(c.points.get().length()).to.be.equal(0);
-
-      // c.points.push(p);
-      p.x(5);
+      // console.log(`----p.store---- ${p.store}`)
+      // console.log(`----p---- ${c.points.get()}`)
+      expect(
+        c.points
+          .get()
+          .get(0)
+          .x()
+      ).to.be.equal(6);
+      p.x(8);
+      expect(
+        c.points
+          .get()
+          .get(0)
+          .x()
+      ).to.be.equal(8);
+      // console.log(`----c.store---- ${c.store}`)
       // expect(c.points.length()).to.be.equal(1);
     });
   });

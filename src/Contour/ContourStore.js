@@ -1,15 +1,21 @@
-import { Map } from "immutable";
-import { defaultContour, setAttr, move, scale } from "./ContourUtil";
+import { List, Map } from "immutable";
+import {
+  defaultContour,
+  setAttr,
+  resolve,
+  pointPush,
+  move,
+  scale
+} from "./ContourUtil";
 import Event from "../Event";
 
 class ContourStore {
   constructor(props) {
     this.props = props;
-    this.eventHandler = new Event();
   }
 
-  register(id, cb) {
-    this.eventHandler.on(id, cb);
+  store() {
+    return this.props.parent();
   }
 
   set(id, contour) {
@@ -23,13 +29,19 @@ class ContourStore {
   addContour(id) {
     const newContour = defaultContour(id);
     this.set(id, newContour);
-    this.eventHandler.emit(id, newContour);
+    this.store().emit(id, newContour);
   }
 
   attrContour(id, attr) {
     const newContour = setAttr(this.get(id), attr);
     this.set(id, newContour);
-    this.eventHandler.emit(id, newContour);
+    this.store().emit(id, newContour);
+  }
+
+  pointPush(id, pointId) {
+    const newContour = pointPush(this.get(id), pointId);
+    this.set(id, newContour);
+    this.store().emit(id, newContour);
   }
 
   // movePoint(id, load) {
@@ -47,6 +59,8 @@ class ContourStore {
   // }
 
   reducer(action, load) {
+    // console.log(`$$ contour store ${this.props.parent().data.get("id")} –– ${action}`)
+
     switch (action) {
       case "CONTOUR_ADD":
         this.addContour(load.id);
@@ -54,6 +68,10 @@ class ContourStore {
 
       case "CONTOUR_ATTR":
         this.attrContour(load.id, load.attr);
+        break;
+
+      case "CONTOUR_PUSH_POINT":
+        this.pointPush(load.id, load.pointId);
         break;
       //
       // case "CONTOUR_MOVE":

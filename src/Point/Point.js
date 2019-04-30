@@ -1,53 +1,68 @@
 // import PointStore from "./PointStore";
-import Store from "../Store";
 import { Map } from "immutable";
+import Store from "../Store";
 import { uuid } from "../uuid";
+import log from "../log";
 import { isNumber } from "../util";
 
 class Point {
   constructor(...args) {
-    this.store = Store;
+    this.store = new Store();
     this.data = null;
+    this.log = false;
 
-    const id = uuid();
-    this.store.points.register(id, newData => this.onChange(newData));
-
-    this.store.points.reducer("POINT_ADD", {
-      id
-    });
-
-    return this.init(args);
-  }
-
-  init(args) {
-    // init with new Point({x: 10, y: 20});
-    if (args.length === 1) {
-      this.set(args[0]);
-      return this;
-    }
+    let id = null;
+    let argNew = null;
 
     // init with x/y => new Point(x, y);
     if (args.length === 2 && isNumber(args[0]) && isNumber(args[1])) {
-      this.set({ x: args[0], y: args[1] });
-      return this;
+      id = uuid();
+
+      argNew = Map({
+        id,
+        x: args[0],
+        y: args[1]
+      });
     }
+
+    if (args.length <= 1) {
+      argNew = Map(args[0]);
+      if (argNew.get("forceId") === true) {
+        id = argNew.get("id");
+      } else {
+        id = uuid();
+      }
+    }
+
+    this.store.register(id, newData => this.onChange(newData));
+
+    this.init(argNew.merge({ id }));
 
     return this;
   }
 
+  init(args) {
+    this.store.points.reducer("POINT_ADD", args);
+  }
+
   onChange(newData) {
+    log.yellow(`point - onChange - Store ${this.store.data.get("id")}`);
+    log.white(log.json(newData, 6));
     this.data = newData;
   }
 
   set(obj) {
     this.store.points.reducer("POINT_ATTR", {
       id: this.data.get("id"),
-      attr: obj,
+      attr: obj
     });
   }
 
   getset(key, param) {
     if (param.length > 0) {
+      log.yellow(`point - set - Store ${this.store.data.get("id")}`);
+      log.white(log.pad(`${key}: ${param}`, 6));
+
       this.set({ [key]: param[0] });
       return this;
     }
@@ -67,11 +82,18 @@ class Point {
     return this.getset("y", args);
   }
 
-  id(...args) {
-    if (args.length > 0) {
+  id(id) {
+    if (id) {
       throw new Error("point.id() can only be called not set.");
     }
     return this.data.get("id");
+  }
+
+  setStore(args) {
+    if (args) {
+      this.store = args;
+    }
+    return this.store;
   }
 
   // move the point by xy

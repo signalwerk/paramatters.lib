@@ -104,7 +104,7 @@ describe("Point", () => {
     });
 
     expect(`${p}`.replace(uuidRegex, "uuid")).to.be.equal(
-      `{"id":"uuid","x":200,"y":300,"type":"line"}`
+      `{"id":"uuid","__type":"point","x":200,"y":300,"type":"line"}`
     );
   });
 
@@ -117,6 +117,7 @@ describe("Point", () => {
 
     expect({ ...p, id: "uuid" }).to.deep.equal({
       id: "uuid",
+      __type: "point",
       x: 200,
       y: 300,
       type: "line"

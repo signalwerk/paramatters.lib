@@ -1,53 +1,53 @@
-import { Map } from "immutable";
-import Event from "../Event";
+import { List, Map } from "immutable";
 import { defaultPoint, setAttr, move, scale } from "./PointUtil";
 
 class PointStore {
   constructor(props) {
     this.props = props;
-    this.eventHandler = new Event();
   }
 
-  register(id, cb) {
-    this.eventHandler.on(id, cb);
+  store() {
+    return this.props.parent();
   }
 
   set(id, point) {
-    this.props.set(id, point)
+    this.props.set(id, point);
   }
 
   get(id) {
-    return this.props.get(id)
+    return this.props.get(id);
   }
 
-  addPoint(id) {
-    const newPoint = defaultPoint(id);
-    this.set(id, newPoint);
-    this.eventHandler.emit(id, newPoint);
+  addPoint(load) {
+    const id = load.get("id");
+    const newPoint = defaultPoint(id).merge(load);
+
+    this.set(newPoint.get("id"), newPoint);
+    this.store().emit(newPoint.get("id"), newPoint);
   }
 
   attrPoint(id, attr) {
     const newPoint = setAttr(this.get(id), attr);
     this.set(id, newPoint);
-    this.eventHandler.emit(id, newPoint);
+    this.store().emit(id, newPoint);
   }
 
   movePoint(id, x, y) {
     const newPoint = move(this.get(id), x, y);
     this.set(id, newPoint);
-    this.eventHandler.emit(id, newPoint);
+    this.store().emit(id, newPoint);
   }
 
   scalePoint(id, x, y) {
     const newPoint = scale(this.get(id), x, y);
     this.set(id, newPoint);
-    this.eventHandler.emit(id, newPoint);
+    this.store().emit(id, newPoint);
   }
 
   reducer(action, load) {
     switch (action) {
       case "POINT_ADD":
-        this.addPoint(load.id);
+        this.addPoint(Map(load));
         break;
 
       case "POINT_ATTR":

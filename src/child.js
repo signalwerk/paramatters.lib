@@ -1,18 +1,33 @@
 // import _ from 'lodash';
+import { List } from "immutable";
+import log from "./log";
 
 class Child {
   constructor(props) {
-
-    this.props  = props
+    this.props = props;
+    // this.children = List();
   }
 
-   get() {
-    return this.props.store.data.get("points").map(this.props.create)
+  get() {
+    return this.props.getter().map(item => {
+      return this.props.create(item);
+    });
   }
 
-  // push() {
-  //
-  // }
+  push(point) {
+    const contourStore = this.props.parent().store.merge(point.store);
+
+    point.setStore(contourStore);
+
+    point.store.register(point.id(), () => {
+      this.props.parent().reload();
+    });
+
+    contourStore.contours.reducer("CONTOUR_PUSH_POINT", {
+      id: this.props.parent().data.get("id"),
+      pointId: point.id()
+    });
+  }
 
   // constructor(parent, id) {
   //   this.parent = parent || null;
@@ -90,7 +105,6 @@ class Child {
   //     }
   //   }
   // }
-
 }
 
 export default Child;

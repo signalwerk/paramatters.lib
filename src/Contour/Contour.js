@@ -1,36 +1,32 @@
 import Store from "../Store";
-import { Map } from "immutable";
 import { uuid } from "../uuid";
-import Child from "../Child";
+import Child from "../child";
+import log from "../log";
 import Point from "../Point/Point";
+
+import { resolve } from "./ContourUtil";
 
 class Contour {
   constructor(...args) {
-    this.store = Store;
+    this.store = new Store();
     this.data = null;
 
     const id = uuid();
-    this.store.contours.register(id, newData => this.onChange(newData));
+    this.store.register(id, newData => this.onChange(newData));
 
     this.store.contours.reducer("CONTOUR_ADD", {
       id
     });
 
     this.points = new Child({
-      store: this.store,
-      parent: id,
+      parent: () => this,
       parentType: "contour",
       type: "points",
-      create: attr => new Point(attr)
+      getter: () => this.data.get("points"),
+      create: attr => new Point(attr.merge({ forceId: true }))
     });
 
     return this.init(args);
-
-    // this.addPoint(newPoint);
-    //
-    // console.log("data", JSON.stringify(this.data));
-    // newPoint.x(12);
-    // console.log("data", JSON.stringify(this.data));
   }
 
   init(args) {
@@ -44,7 +40,15 @@ class Contour {
   }
 
   onChange(newData) {
-    this.data = newData;
+    log.cyan(`contour - onChange - Store ${this.store.data.get("id")}`);
+    log.white(log.json(newData, 6));
+    this.data = resolve(newData, this.store);
+  }
+
+  reload() {
+    const id = this.data.get("id");
+    const newData = this.store.data.getIn(["contours", id]);
+    this.data = resolve(newData, this.store);
   }
 
   set(obj) {
@@ -77,6 +81,13 @@ class Contour {
   //     this.data = this.data.updateIn(["points"], points => points.push(point.data));
   //   }
   // }
+
+  setStore(args) {
+    if (args) {
+      this.store = args;
+    }
+    return this.store;
+  }
 
   toString() {
     return JSON.stringify(this.data);
