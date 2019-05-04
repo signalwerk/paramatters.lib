@@ -9,7 +9,6 @@ class Point {
   constructor(...args) {
     this.store = new Store();
     this.data = null;
-    this.log = false;
 
     let id = null;
     let argNew = null;

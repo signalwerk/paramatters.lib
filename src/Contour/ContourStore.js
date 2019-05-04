@@ -26,8 +26,10 @@ class ContourStore {
     return this.props.get(id);
   }
 
-  addContour(id) {
-    const newContour = defaultContour(id);
+  addContour(id, load) {
+    const newContour = defaultContour()
+      .merge(load)
+      .merge({ id });
     this.set(id, newContour);
     this.store().emit(id, newContour);
   }
@@ -63,7 +65,7 @@ class ContourStore {
 
     switch (action) {
       case "CONTOUR_ADD":
-        this.addContour(load.id);
+        this.addContour(load.id, load.attr);
         break;
 
       case "CONTOUR_ATTR":

@@ -4,6 +4,7 @@ import { uuid } from "./uuid";
 // import { defaultPoint, setAttr, move, scale } from "./PointUtil";
 import ContourStore from "./Contour/ContourStore";
 import PointStore from "./Point/PointStore";
+import resolve from "./resolve";
 
 class Store {
   constructor() {
@@ -34,6 +35,10 @@ class Store {
         return this.data.getIn(["contours", id]);
       }
     });
+  }
+
+  resolve(item) {
+    return resolve(item, this);
   }
 
   register(id, cb) {

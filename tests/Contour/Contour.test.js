@@ -1,6 +1,8 @@
 import chai, { expect } from "chai";
 import chaiUuid from "chai-uuid";
 import Contour from "../../src/Contour/Contour";
+import { PointType } from "../../src/Point/PointUtil";
+import { uuidRegex } from "../../src/uuid";
 import Point from "../../src/Point/Point";
 
 chai.use(chaiUuid);
@@ -27,39 +29,92 @@ describe("Contour", () => {
 
       expect(c.closed()).to.be.equal(true);
     });
+
+    it("should be able to set id if forced", () => {
+      const c = new Contour({ id: "1", forceId: true });
+      expect(c.id()).to.be.equal("1");
+    });
   });
 
   describe("child handling", () => {
     it("should append point to contour", () => {
       const c = new Contour();
-      const p = new Point(); //.x(3).y(5);
-      // expect(c.points.get().size).to.be.equal(0);
-      p.log = true;
-      p.x(4);
-      expect(p.x()).to.be.equal(4);
-      c.points.push(p);
-      p.x(6);
-      expect(p.x()).to.be.equal(6);
-      // expect(c.points.get().size).to.be.equal(1);
-      // p.x(50);
+      const p = new Point();
 
-      // console.log(`----p.store---- ${p.store}`)
-      // console.log(`----p---- ${c.points.get()}`)
-      expect(
-        c.points
-          .get()
-          .get(0)
-          .x()
-      ).to.be.equal(6);
-      p.x(8);
-      expect(
-        c.points
-          .get()
-          .get(0)
-          .x()
-      ).to.be.equal(8);
-      // console.log(`----c.store---- ${c.store}`)
-      // expect(c.points.length()).to.be.equal(1);
+      expect(c.points.get().size).to.be.equal(0);
+      c.points.push(p);
+      expect(c.points.get().size).to.be.equal(1);
     });
+
+    it("should read last point of contour", () => {
+      const c = new Contour();
+      const p = new Point(10, 20);
+      c.points.push(p);
+
+      expect(c.points.last().x()).to.be.equal(10);
+      expect(c.points.last().y()).to.be.equal(20);
+    });
+
+    it("should read point by index", () => {
+      const c = new Contour();
+      const p1 = new Point(10, 20);
+      const p2 = new Point(15, 25);
+      c.points.push(p1);
+      c.points.push(p2);
+
+      expect(c.points.get(0).x()).to.be.equal(10);
+      expect(c.points.get(0).y()).to.be.equal(20);
+      expect(c.points.get(1).x()).to.be.equal(15);
+      expect(c.points.get(1).y()).to.be.equal(25);
+    });
+  });
+
+  it("toJS returns data object", () => {
+    const c = new Contour({
+      closed: true
+    });
+    const p = new Point({
+      type: PointType.line,
+      x: 200,
+      y: 300
+    });
+    c.points.push(p);
+
+    const cObj = c.toJS();
+
+    expect({
+      ...cObj,
+      points: cObj.points.map(item => ({ ...item, id: "uuid" })),
+      id: "uuid"
+    }).to.deep.equal({
+      id: "uuid",
+      __type: "contour",
+      closed: true,
+      points: [
+        {
+          id: "uuid",
+          __type: "point",
+          x: 200,
+          y: 300,
+          type: "line"
+        }
+      ]
+    });
+  });
+
+  it("toString is json", () => {
+    const c = new Contour({
+      closed: true
+    });
+    const p = new Point({
+      type: PointType.line,
+      x: 200,
+      y: 300
+    });
+    c.points.push(p);
+
+    expect(`${c}`.replace(uuidRegex, "uuid")).to.be.equal(
+      `{"id":"uuid","__type":"contour","closed":true,"points":[{"id":"uuid","__type":"point","x":200,"y":300,"type":"line"}]}`
+    );
   });
 });

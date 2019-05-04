@@ -23,6 +23,11 @@ describe("Point", () => {
     expect(p.y()).to.be.equal(330);
   });
 
+  it("should be able to set id if forced", () => {
+    const p = new Point({ id: "1", forceId: true });
+    expect(p.id()).to.be.equal("1");
+  });
+
   it("should set all attributes when constructed with an object", () => {
     const p = new Point({
       type: PointType.line,
@@ -96,18 +101,6 @@ describe("Point", () => {
     expect(p2.id()).to.be.a.uuid("v4");
   });
 
-  it("toString is json", () => {
-    const p = new Point({
-      type: PointType.line,
-      x: 200,
-      y: 300
-    });
-
-    expect(`${p}`.replace(uuidRegex, "uuid")).to.be.equal(
-      `{"id":"uuid","__type":"point","x":200,"y":300,"type":"line"}`
-    );
-  });
-
   it("toJS returns data object", () => {
     const p = new Point({
       type: PointType.line,
@@ -122,5 +115,17 @@ describe("Point", () => {
       y: 300,
       type: "line"
     });
+  });
+
+  it("toString is json", () => {
+    const p = new Point({
+      type: PointType.line,
+      x: 200,
+      y: 300
+    });
+
+    expect(`${p}`.replace(uuidRegex, "uuid")).to.be.equal(
+      `{"id":"uuid","__type":"point","x":200,"y":300,"type":"line"}`
+    );
   });
 });

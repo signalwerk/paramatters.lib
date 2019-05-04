@@ -1,31 +1,52 @@
 // import _ from 'lodash';
-import { List } from "immutable";
 import log from "./log";
+import { isNumber } from "./util";
 
 class Child {
   constructor(props) {
     this.props = props;
-    // this.children = List();
   }
 
-  get() {
-    return this.props.getter().map(item => {
-      return this.props.create(item);
+  get store() {
+    return this.props.parent.store;
+  }
+
+  get parent() {
+    return this.props.parent;
+  }
+
+  get data() {
+    return this.props.parent.data;
+  }
+
+  get(index) {
+    const currentChildren = this.data.get(`${this.props.memeberType}s`);
+
+    if (isNumber(index)) {
+      return this.props.create(this.store.resolve(currentChildren.get(index)));
+    }
+    return currentChildren.map(item => {
+      return this.props.create(this.store.resolve(item));
     });
   }
 
-  push(point) {
-    const contourStore = this.props.parent().store.merge(point.store);
+  last() {
+    const all = this.props.getter();
+    return this.props.create(this.store.resolve(all.get(all.size - 1)));
+  }
 
-    point.setStore(contourStore);
+  get size() {
+    return this.props.getter().size;
+  }
 
-    point.store.register(point.id(), () => {
-      this.props.parent().reload();
-    });
+  push(item) {
+    const contourStore = this.store.merge(item.store);
+
+    item.setStore(contourStore);
 
     contourStore.contours.reducer("CONTOUR_PUSH_POINT", {
-      id: this.props.parent().data.get("id"),
-      pointId: point.id()
+      id: this.data.get("id"),
+      pointId: item.id()
     });
   }
 
@@ -51,14 +72,6 @@ class Child {
   //   this._children = [];
   // }
   //
-  // length() {
-  //   return this._children.length;
-  // }
-  //
-  // last() {
-  //   return this.get(this.length() - 1);
-  // }
-  //
   // get first() {
   //   return this.get(0);
   // }
@@ -78,32 +91,6 @@ class Child {
   //
   // insertAt(index, item) {
   //   this._children.splice(index, 0, item);
-  // }
-  //
-  // get(index) {
-  //
-  //   // get by name or by intex number
-  //   if (_.isNumber(index)) {
-  //     return this._children[index];
-  //   } else {
-  //
-  //     var getByName = this._children.filter(
-  //
-  //       function(element) {
-  //         if (element.name() == index) {
-  //           return true;
-  //         } else {
-  //           return false;
-  //         }
-  //       }
-  //     );
-  //
-  //     if (getByName.length === 0) {
-  //       return false;
-  //     } else {
-  //       return getByName[0];
-  //     }
-  //   }
   // }
 }
 

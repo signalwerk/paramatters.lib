@@ -8,17 +8,9 @@ export const setAttr = (contour, attr) => {
   return contour.merge(dataLoad);
 };
 
-export const resolve = (contour, store) => {
-  return contour.merge({
-    points: contour.get("points").map(item => {
-      return store.data.getIn(["points", item]);
-    })
-  });
-};
-
 export const pointPush = (contour, pointId) => {
   return contour.merge({
-    points: contour.get("points").push(pointId)
+    points: contour.get("points").push(Map({ id: pointId, __type: "point" }))
   });
 };
 
@@ -36,9 +28,9 @@ export const scale = (contour, x, y) => {
   });
 };
 
-export const defaultContour = id => {
+export const defaultContour = () => {
   return Map({
-    id: id || uuid(),
+    id: uuid(),
     __type: "contour",
     closed: false,
     points: List()
