@@ -55,6 +55,21 @@ describe("Contour", () => {
       expect(c.points.last().y()).to.be.equal(20);
     });
 
+    it("should create only the point in one store", () => {
+      const c = new Contour();
+      expect(c.points.size).to.be.equal(0);
+
+      c.points.push(new Point(0, 0).type(PointType.move));
+
+      expect(c.points.size).to.be.equal(1);
+      c.points.push(new Point(10, 0).type(PointType.line));
+      expect(c.points.size).to.be.equal(2);
+      c.points.push(new Point(10, 10).type(PointType.line));
+      expect(c.points.size).to.be.equal(3);
+      c.points.push(new Point(0, 10).type(PointType.line));
+      expect(c.points.size).to.be.equal(4);
+    });
+
     it("should read point by index", () => {
       const c = new Contour();
       const p1 = new Point(10, 20);
