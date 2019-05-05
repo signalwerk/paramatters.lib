@@ -1,9 +1,27 @@
-import { dependency } from "./dependency";
+import pPoint from "./Point/Point";
+import pContour from "./Contour/Contour";
+import pResolver from "./resolve";
+import {contourToSvg} from "./Contour/ContourSvg";
+import { PointType as pPointType } from "./Point/PointUtil";
 
-class Paramatters {
-  render(n) {
-    return `${dependency()} + ${n}`;
-  }
+
+const pRenderer = {
+  ContourToSVG: contourToSvg
 }
-
+const Paramatters = {
+  // render(n) {
+  //   return `${dependency()} + ${n}`;
+  // }
+  Point: pPoint,
+  Contour: pContour,
+  PointType: pPointType,
+  Resolver: pResolver,
+  Renderer: pRenderer,
+};
 export default Paramatters;
+
+export const Point = pPoint;
+export const Contour = pContour;
+export const PointType = pPointType;
+export const Resolver = pResolver;
+export const Renderer = pRenderer;

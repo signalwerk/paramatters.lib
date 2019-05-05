@@ -92,6 +92,10 @@ class Contour {
     return this.store.resolve(this.data).toJS();
   }
 
+    resolve() {
+      return this.store.resolve(this.data);
+    }
+
   // copy a point without the events
   clone() {
     return new Contour(this.data);
