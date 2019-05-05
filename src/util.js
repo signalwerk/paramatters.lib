@@ -1,6 +1,5 @@
 // https://gist.github.com/jed/982883
 // this can be any function that returns a string
-import { Set } from "immutable";
 
 export const isNumber = n => {
   return typeof n === "number";
