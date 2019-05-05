@@ -10,7 +10,7 @@ class Store {
   constructor() {
     this.data = Map({
       id: uuid(),
-      type: "Store",
+      __type: "store",
       contours: Map(),
       points: Map(),
       events: Map()

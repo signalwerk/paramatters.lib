@@ -10,7 +10,13 @@ const resolveItem = (candidate, store) => {
       })
     });
   }
-
+  if (candidate.get("__type") === "store") {
+    return candidate.merge({
+      contours: candidate.get("contours").map(item => {
+        return resolveItem(item, store);
+      })
+    });
+  }
   return null;
 };
 
