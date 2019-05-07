@@ -1,6 +1,8 @@
 // https://github.com/Pomax/js-svg-path/blob/master/svg-parser.js
 // keys https://github.com/jxnblk/path-ast/blob/master/lib/keys.js
 
+// https://www.w3.org/TR/SVG/paths.html
+
 import Point from "../Point/Point";
 import Contour from "./Contour";
 
@@ -58,10 +60,10 @@ class SVGParser {
     }
   }
 
-  getPoint(isRelative, index) {
+  calcPoint(isRelative, x, y) {
     let p = {
-      x: this.numbers[index + 0],
-      y: this.numbers[index + 1]
+      x: x || this.current.x,
+      y: y || this.current.y
     };
 
     if (isRelative) {
@@ -84,7 +86,7 @@ class SVGParser {
 
     this.consumeWhitespace();
 
-    if (this.pos >= this.length ) {
+    if (this.pos >= this.length) {
       console.log("reach end");
       return;
     }
@@ -92,16 +94,16 @@ class SVGParser {
     let code = this.consumeChar();
     let isRelative = code.toLowerCase() === code;
 
-
     let p1 = null;
     let p2 = null;
     let p3 = null;
 
     switch (code.toLowerCase()) {
       case "m":
+        // always a start of a path
         this.consumeNumbers();
 
-        p1 = this.getPoint(isRelative, 0);
+        p1 = this.calcPoint(isRelative, this.numbers[0], this.numbers[1]);
 
         console.log("move to", {
           x: p1.x,
@@ -110,12 +112,26 @@ class SVGParser {
 
         this.parseSegment();
         break;
+
+      case "l":
+        this.consumeNumbers();
+
+        p1 = this.calcPoint(isRelative, this.numbers[0], this.numbers[1]);
+
+        console.log("line to", {
+          x: p1.x,
+          y: p1.y
+        });
+
+        this.parseSegment();
+        break;
+
       case "c":
         this.consumeNumbers();
 
-        p1 = this.getPoint(isRelative, 0);
-        p2 = this.getPoint(isRelative, 2);
-        p3 = this.getPoint(isRelative, 4);
+        p1 = this.calcPoint(isRelative, this.numbers[0], this.numbers[1]);
+        p2 = this.calcPoint(isRelative, this.numbers[2], this.numbers[3]);
+        p3 = this.calcPoint(isRelative, this.numbers[4], this.numbers[5]);
 
         console.log("c to", {
           x1: p1.x,
@@ -132,8 +148,8 @@ class SVGParser {
       case "s":
         this.consumeNumbers();
 
-        p1 = this.getPoint(isRelative, 0);
-        p2 = this.getPoint(isRelative, 2);
+        p1 = this.calcPoint(isRelative, this.numbers[0], this.numbers[1]);
+        p2 = this.calcPoint(isRelative, this.numbers[2], this.numbers[3]);
 
         console.log("s to", {
           x1: p1.x,
@@ -148,7 +164,7 @@ class SVGParser {
       case "h":
         this.consumeNumbers();
 
-        p1 = this.getPoint(isRelative, 0);
+        p1 = this.calcPoint(isRelative, this.numbers[0]);
 
         console.log("h to", {
           x1: p1.x,
@@ -158,8 +174,19 @@ class SVGParser {
         this.parseSegment();
         break;
 
-      case "z":
+      case "v":
+        this.consumeNumbers();
 
+        p1 = this.calcPoint(isRelative, null, this.numbers[0]);
+
+        console.log("h to", {
+          x1: p1.x,
+          y1: p1.y
+        });
+
+        this.parseSegment();
+        break;
+      case "z":
         console.log("z");
 
         this.parseSegment();

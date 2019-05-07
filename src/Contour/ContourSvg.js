@@ -3,21 +3,19 @@ export const svgToContour = svg => {
 };
 
 // handle immutable and obj
-const get = (obj, key) => (obj[key] || obj.get(key))
+const get = (obj, key) => obj[key] || obj.get(key);
 
 export const contourToSvg = contour => {
   const path = [];
   let offcurvePoints = [];
-  (get(contour, "points")).forEach(point => {
+  get(contour, "points").forEach(point => {
     switch (get(point, "type")) {
       case "move":
         path.push(`M${get(point, "x")} ${get(point, "y")}`);
         offcurvePoints = [];
         break;
       case "offcurve":
-        offcurvePoints.push(
-          `${get(point, "x")} ${get(point, "y")}`
-        );
+        offcurvePoints.push(`${get(point, "x")} ${get(point, "y")}`);
         break;
       case "curve":
         path.push(
@@ -30,9 +28,7 @@ export const contourToSvg = contour => {
         offcurvePoints = [];
         break;
       default:
-        throw new Error(
-          `render error of point-type: ${get(point, "type")}`
-        );
+        throw new Error(`render error of point-type: ${get(point, "type")}`);
     }
   });
 
