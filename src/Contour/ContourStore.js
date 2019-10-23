@@ -1,13 +1,8 @@
-import { List, Map } from "immutable";
 import {
   defaultContour,
   setAttr,
-  resolve,
   pointPush,
-  move,
-  scale
 } from "./ContourUtil";
-import Event from "../Event";
 
 class ContourStore {
   constructor(props) {

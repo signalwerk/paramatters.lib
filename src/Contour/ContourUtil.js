@@ -9,9 +9,10 @@ export const setAttr = (contour, attr) => {
 };
 
 export const pointPush = (contour, pointId) => {
-  return contour.merge({
-    points: contour.get("points").push(Map({ id: pointId, __type: "point" }))
-  });
+  return contour.set(
+    "points",
+    contour.get("points").push(Map({ id: pointId, __type: "point" }))
+  );
 };
 
 export const move = (contour, x, y) => {

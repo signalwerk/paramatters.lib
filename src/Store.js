@@ -10,7 +10,7 @@ class Store {
   constructor() {
     this.data = Map({
       id: uuid(),
-      type: "Store",
+      __type: "store",
       contours: Map(),
       points: Map(),
       events: Map()
@@ -19,7 +19,7 @@ class Store {
     this.points = new PointStore({
       parent: () => this,
       set: (id, point) => {
-        this.data = this.data.mergeDeep({ points: { [id]: point } });
+        this.data =  this.data.setIn(["points", id], point);
       },
       get: id => {
         return this.data.getIn(["points", id]);
@@ -29,7 +29,7 @@ class Store {
     this.contours = new ContourStore({
       parent: () => this,
       set: (id, contour) => {
-        this.data = this.data.mergeDeep({ contours: { [id]: contour } });
+        this.data =  this.data.setIn(["contours", id], contour);
       },
       get: id => {
         return this.data.getIn(["contours", id]);
@@ -42,14 +42,12 @@ class Store {
   }
 
   register(id, cb) {
-    const currentEvent = List(this.data.get("events").get(id));
-    this.data = this.data.mergeDeep({
-      events: { [id]: currentEvent.push(cb) }
-    });
+    const currentEvent = List(this.data.getIn(["events", id]));
+    this.data = this.data.setIn(["events", id], currentEvent.push(cb));
   }
 
   emit(id, ...args) {
-    const currentEvent = List(this.data.get("events").get(id));
+    const currentEvent = List(this.data.getIn(["events", id]));
     currentEvent.map(item => item.apply(this, args));
   }
 

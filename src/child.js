@@ -1,5 +1,3 @@
-// import _ from 'lodash';
-import log from "./log";
 import { isNumber } from "./util";
 
 class Child {
