@@ -4,7 +4,7 @@
   "author": "Stefan Huber, Signalwerk GmbH",
   "license": "MIT",
   "description": "Library for parametric vector graphics",
-  "main": "dist/lib.umd.js",
+  "main": "./src/index.js",
   "jsnext:main": "dist/lib.es6.js",
   "module": "dist/lib.es6.js",
   "repository": {
