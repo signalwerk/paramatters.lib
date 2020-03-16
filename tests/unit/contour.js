@@ -45,7 +45,17 @@ describe('contour model', () => {
       expect(c.name()).to.be.equal('test');
       // expect(p.print()).to.be.equal('name: test\ntype: line\nx: 2\ny: 3\nsmooth: true\nid: kä@k');
     });
+
+    it("should close path with close()", () => {
+      const c = new Contour().close();
+      expect(c.closed()).to.be.equal(true);
+    });
+
+
+
   });
+
+
 
   describe('child handling', () => {
     it('should append point to contour', () => {

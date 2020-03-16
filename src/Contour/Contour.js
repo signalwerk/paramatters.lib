@@ -70,6 +70,11 @@ class Contour {
     return this.getset("closed", args);
   }
 
+  close() {
+    this.set({ closed: true });
+    return this;
+  }
+
   id(id) {
     if (id) {
       throw new Error("contour.id() can only be called not set.");
@@ -92,9 +97,9 @@ class Contour {
     return this.store.resolve(this.data).toJS();
   }
 
-    resolve() {
-      return this.store.resolve(this.data);
-    }
+  resolve() {
+    return this.store.resolve(this.data);
+  }
 
   // copy a point without the events
   clone() {

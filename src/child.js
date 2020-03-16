@@ -46,6 +46,7 @@ class Child {
       id: this.data.get("id"),
       pointId: item.id()
     });
+    return this;
   }
 
   // constructor(parent, id) {
