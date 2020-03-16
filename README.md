@@ -3,6 +3,27 @@
 * **npm test** to run tests
 * **npm start** to watch `src` and `tests` and re-run tests
 
+## Use localy 
+((this ist not recommended. it's just for developers working on the lib))
+
+get Lib: 
+```sh
+mkdir -p ./modules
+git submodule add https://github.com/signalwerk/paramatters.lib.git "./modules/paramatters.lib"
+```
+
+
+`package.json`
+
+```json
+  ...
+  "dependencies": {
+    "paramatters.lib": "file:modules/paramatters.lib"
+  }
+  ...
+```
+
+
 ## ToDo
 * type check with [superstruct](https://github.com/ianstormtaylor/superstruct)
 * save like [jaysn](https://github.com/lowsprofile/jaysn)
