@@ -3,8 +3,8 @@
 
 // https://www.w3.org/TR/SVG/paths.html
 
-import Point from "../Point/Point";
-import Contour from "./Contour";
+// import Point from "../Point/Point";
+// import Contour from "./Contour";
 
 class SVGParser {
   consumeWhitespace() {

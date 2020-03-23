@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment } from "react";
 import { Line } from "./line";
 import { Text } from "./text";
 import { Circle } from "./circle";

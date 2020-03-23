@@ -140,10 +140,10 @@ export default class TextToSVG {
 
   getD(text, options = {}) {
     const fontSize = options.fontSize || 72;
-    const kerning = "kerning" in options ? options.kerning : true;
-    const letterSpacing =
-      "letterSpacing" in options ? options.letterSpacing : false;
-    const tracking = "tracking" in options ? options.tracking : false;
+    // const kerning = "kerning" in options ? options.kerning : true;
+    // const letterSpacing =
+    //   "letterSpacing" in options ? options.letterSpacing : false;
+    // const tracking = "tracking" in options ? options.tracking : false;
     const metrics = this.getMetrics(text, options);
     // const path = this.font.getPath(text, metrics.x, metrics.baseline, fontSize, { kerning, letterSpacing, tracking });
 
