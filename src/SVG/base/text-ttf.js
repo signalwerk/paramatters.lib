@@ -28,8 +28,8 @@ export default class TextToSVG {
   }
 
   static parse(buffer) {
-    console.log({buffer})
-    
+    console.log({ buffer });
+
     return new TextToSVG(opentype.parse(buffer));
   }
 

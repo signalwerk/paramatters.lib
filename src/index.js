@@ -2,13 +2,12 @@ import pPoint from "./Point/Point";
 import pContour from "./Contour/Contour";
 import pSVGParser from "./Contour/SVGParser";
 import pResolver from "./resolve";
-import {contourToSvg} from "./Contour/ContourSvg";
+import { contourToSvg } from "./Contour/ContourSvg";
 import { PointType as pPointType } from "./Point/PointUtil";
-
 
 const pRenderer = {
   ContourToSVG: contourToSvg
-}
+};
 const Paramatters = {
   // render(n) {
   //   return `${dependency()} + ${n}`;
@@ -18,7 +17,7 @@ const Paramatters = {
   SVGParser: pSVGParser,
   PointType: pPointType,
   Resolver: pResolver,
-  Renderer: pRenderer,
+  Renderer: pRenderer
 };
 export default Paramatters;
 

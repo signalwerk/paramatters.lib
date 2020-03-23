@@ -1,7 +1,6 @@
 // import Child from './child.js';
 
 class fEvent {
-
   constructor() {
     this._events = {};
   }
@@ -28,10 +27,12 @@ class fEvent {
       return;
     }
     for (var i = 0; i < this._events[event].length; i++) {
-      this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
+      this._events[event][i].apply(
+        this,
+        Array.prototype.slice.call(arguments, 1)
+      );
     }
   }
-
 }
 
 export default fEvent;

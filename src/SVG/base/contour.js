@@ -3,7 +3,7 @@ import { Renderer } from "paramatters.lib";
 
 const PATH_PREFS = {
   stroke: "black",
-  strokeWidth:3,
+  strokeWidth: 3,
   fill: "none"
 };
 

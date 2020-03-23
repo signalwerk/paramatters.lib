@@ -88,21 +88,20 @@ describe("Contour", () => {
       expect(c.points.get(1).y()).to.be.equal(25);
     });
 
+    it("should write point by index", () => {
+      const c = new Contour();
+      const p1 = new Point(10, 20);
+      const p2 = new Point(15, 25);
+      c.points.push(p1);
+      c.points.push(p2);
+      p1.x(12);
 
-        it("should write point by index", () => {
-          const c = new Contour();
-          const p1 = new Point(10, 20);
-          const p2 = new Point(15, 25);
-          c.points.push(p1);
-          c.points.push(p2);
-p1.x(12)
-
-c.points.get(1).x(17)
-          expect(c.points.get(0).x()).to.be.equal(12);
-          expect(c.points.get(0).y()).to.be.equal(20);
-          expect(c.points.get(1).x()).to.be.equal(17);
-          expect(c.points.get(1).y()).to.be.equal(25);
-        });
+      c.points.get(1).x(17);
+      expect(c.points.get(0).x()).to.be.equal(12);
+      expect(c.points.get(0).y()).to.be.equal(20);
+      expect(c.points.get(1).x()).to.be.equal(17);
+      expect(c.points.get(1).y()).to.be.equal(25);
+    });
   });
 
   it("toJS returns data object", () => {

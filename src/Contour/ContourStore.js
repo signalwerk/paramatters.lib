@@ -1,8 +1,4 @@
-import {
-  defaultContour,
-  setAttr,
-  pointPush,
-} from "./ContourUtil";
+import { defaultContour, setAttr, pointPush } from "./ContourUtil";
 
 class ContourStore {
   constructor(props) {

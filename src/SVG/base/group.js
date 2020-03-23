@@ -36,10 +36,7 @@ export const Group = ({ data }, fontRenderer) => {
     }
   });
 
-  let matrix = compose(
-    identity(),
-    ...fromDefinition(transformations)
-  );
+  let matrix = compose(identity(), ...fromDefinition(transformations));
 
   return (
     <Fragment>

@@ -19,7 +19,7 @@ class Store {
     this.points = new PointStore({
       parent: () => this,
       set: (id, point) => {
-        this.data =  this.data.setIn(["points", id], point);
+        this.data = this.data.setIn(["points", id], point);
       },
       get: id => {
         return this.data.getIn(["points", id]);
@@ -29,7 +29,7 @@ class Store {
     this.contours = new ContourStore({
       parent: () => this,
       set: (id, contour) => {
-        this.data =  this.data.setIn(["contours", id], contour);
+        this.data = this.data.setIn(["contours", id], contour);
       },
       get: id => {
         return this.data.getIn(["contours", id]);
