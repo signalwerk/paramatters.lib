@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Renderer } from "paramatters.lib";
+import { Renderer } from "../../";
 
 const PATH_PREFS = {
   stroke: "black",

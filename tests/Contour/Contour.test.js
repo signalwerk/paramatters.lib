@@ -123,12 +123,12 @@ describe("Contour", () => {
       id: "uuid"
     }).to.deep.equal({
       id: "uuid",
-      __type: "contour",
+      type: "contour",
       closed: true,
       points: [
         {
           id: "uuid",
-          __type: "point",
+          type: "point",
           x: 200,
           y: 300,
           type: "line"
@@ -149,7 +149,7 @@ describe("Contour", () => {
     c.points.push(p);
 
     expect(`${c}`.replace(uuidRegex, "uuid")).to.be.equal(
-      `{"id":"uuid","__type":"contour","closed":true,"points":[{"id":"uuid","__type":"point","x":200,"y":300,"type":"line"}]}`
+      `{"id":"uuid","type":"contour","closed":true,"points":[{"id":"uuid","type":"point","x":200,"y":300,"type":"line"}]}`
     );
   });
 });

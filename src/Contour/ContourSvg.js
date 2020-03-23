@@ -1,9 +1,9 @@
+import get from "../util/get";
+
+
 export const svgToContour = svg => {
   throw new Error(`SVG interpreter not implemented righ now: ${svg}`);
 };
-
-// handle immutable and obj
-const get = (obj, key) => obj[key] || obj.get(key);
 
 export const contourToSvg = contour => {
   const path = [];

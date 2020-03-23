@@ -11,7 +11,7 @@ export const setAttr = (contour, attr) => {
 export const pointPush = (contour, pointId) => {
   return contour.set(
     "points",
-    contour.get("points").push(Map({ id: pointId, __type: "point" }))
+    contour.get("points").push(Map({ id: pointId, type: "point" }))
   );
 };
 
@@ -32,7 +32,7 @@ export const scale = (contour, x, y) => {
 export const defaultContour = () => {
   return Map({
     id: uuid(),
-    __type: "contour",
+    type: "contour",
     closed: false,
     points: List()
   });

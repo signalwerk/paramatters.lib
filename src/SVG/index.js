@@ -7,8 +7,10 @@ let Render = ({ data, fonts }) => {
   const [fontRenderer, setFontRenderer] = useState(false);
 
   useEffect(() => {
-    let buffer = decode(fonts["WorkSans-Medium"]);
-    setFontRenderer(TextToSVG.parse(buffer));
+    if (fonts) {
+      let buffer = decode(fonts["WorkSans-Medium"]);
+      setFontRenderer(TextToSVG.parse(buffer));
+    }
   }, [fonts]);
 
   return <Fragment>{Handler({ data }, fontRenderer)}</Fragment>;

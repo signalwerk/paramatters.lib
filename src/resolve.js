@@ -1,16 +1,16 @@
 const resolveItem = (candidate, store) => {
-  if (candidate.get("__type") === "point") {
+  if (candidate.get("type") === "point") {
     return store.data.getIn(["points", candidate.get("id")]);
   }
 
-  if (candidate.get("__type") === "contour") {
+  if (candidate.get("type") === "contour") {
     return candidate.merge({
       points: candidate.get("points").map(item => {
         return resolveItem(item, store);
       })
     });
   }
-  if (candidate.get("__type") === "store") {
+  if (candidate.get("type") === "store") {
     return candidate.merge({
       contours: candidate.get("contours").map(item => {
         return resolveItem(item, store);

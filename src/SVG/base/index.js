@@ -5,18 +5,21 @@ import { Circle } from "./circle";
 import { Polygon } from "./polygon";
 import { Contour } from "./contour";
 import { Group } from "./group";
+import get from "../../util/get";
+
 
 let Render = ({ data }, fontRenderer) => {
   return data.map(item => {
+
     return (
       <Fragment>
-        {item.type === "circle" && Circle({ data: item.attributes })}
-        {item.type === "polygon" && Polygon({ data: item.attributes })}
-        {item.type === "contour" && Contour({ data: item })}
-        {item.type === "line" && Line({ data: item.attributes })}
-        {item.type === "group" &&
+        {get(item, "type") === "circle" && Circle({ data: item.attributes })}
+        {get(item, "type") === "polygon" && Polygon({ data: item.attributes })}
+        {get(item, "type") === "contour" && Contour({ data: item })}
+        {get(item, "type") === "line" && Line({ data: item.attributes })}
+        {get(item, "type") === "group" &&
           Group({ data: item.attributes }, fontRenderer)}
-        {item.type === "text" &&
+        {get(item, "type") === "text" &&
           fontRenderer &&
           Text({ data: item.attributes }, fontRenderer)}
       </Fragment>
