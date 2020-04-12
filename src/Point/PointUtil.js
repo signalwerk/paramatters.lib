@@ -39,10 +39,9 @@ export const scale = (point, x, y) => {
 export const defaultPoint = id => {
   return Map({
     id: id || uuid(),
-    __type: "point",
+    type: PointType.none,
     x: 0.0,
     y: 0.0,
-    type: PointType.none
   });
 };
 

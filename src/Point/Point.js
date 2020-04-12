@@ -76,11 +76,26 @@ class Point {
   x(...args) {
     return this.getset("x", args);
   }
+  $x() {
+    return {
+      type: "point",
+      id: this.id(),
+      attr: "x"
+    };
+  }
 
   y(...args) {
     return this.getset("y", args);
   }
 
+  $y() {
+    return {
+      type: "point",
+      id: this.id(),
+      attr: "y"
+    };
+  }
+  
   id(id) {
     if (id) {
       throw new Error("point.id() can only be called not set.");
@@ -121,6 +136,7 @@ class Point {
   }
 
   toString() {
+    console.log("-----toString", this.data);
     return JSON.stringify(this.data);
   }
 
