@@ -1,6 +1,5 @@
 import get from "../util/get";
 
-
 export const svgToContour = svg => {
   throw new Error(`SVG interpreter not implemented righ now: ${svg}`);
 };

@@ -41,7 +41,7 @@ export const defaultPoint = id => {
     id: id || uuid(),
     type: PointType.none,
     x: 0.0,
-    y: 0.0,
+    y: 0.0
   });
 };
 

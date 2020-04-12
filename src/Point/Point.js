@@ -95,7 +95,7 @@ class Point {
       attr: "y"
     };
   }
-  
+
   id(id) {
     if (id) {
       throw new Error("point.id() can only be called not set.");

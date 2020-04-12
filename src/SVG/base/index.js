@@ -7,10 +7,8 @@ import { Contour } from "./contour";
 import { Group } from "./group";
 import get from "../../util/get";
 
-
 let Render = ({ data }, fontRenderer) => {
   return data.map(item => {
-
     return (
       <Fragment>
         {get(item, "type") === "circle" && Circle({ data: item.attributes })}
