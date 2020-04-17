@@ -3,10 +3,10 @@
 * **npm test** to run tests
 * **npm start** to watch `src` and `tests` and re-run tests
 
-## Use localy 
+## Use localy
 ((this ist not recommended. it's just for developers working on the lib))
 
-get Lib: 
+get Lib:
 ```sh
 mkdir -p ./modules
 git submodule add https://github.com/signalwerk/paramatters.lib.git "./modules/paramatters.lib"
@@ -25,6 +25,8 @@ git submodule add https://github.com/signalwerk/paramatters.lib.git "./modules/p
 
 
 ## ToDo
+* [simple-math-ast](https://github.com/Flyr1Q/simple-math-ast)
+* [Font-Parser](https://github.com/yWorks/jsPDF/blob/master/src/libs/ttffont.js)
 * type check with [superstruct](https://github.com/ianstormtaylor/superstruct)
 * save like [jaysn](https://github.com/lowsprofile/jaysn)
 * [Interpolation Weights](https://github.com/jpt/font-scripts/blob/master/Glyphs/Family%20Weights%20Calculator.py#L167-L177)

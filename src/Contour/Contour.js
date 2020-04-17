@@ -9,6 +9,7 @@ class Contour {
   constructor(...args) {
     this.store = new Store();
     this.data = null;
+    this.events = [];
 
     let id = null;
     let argNew = null;
@@ -22,8 +23,6 @@ class Contour {
       }
     }
 
-    this.store.register(id, newData => this.onChange(newData));
-
     this.points = new Child({
       parent: this,
       parentType: "contour",
@@ -33,10 +32,18 @@ class Contour {
     });
 
     this.init(argNew.merge({ id }));
+    this.id = id
+    this.update();
 
     return this;
   }
+  register(cb) {
+    this.events.push(cb);
+  }
 
+  emit(...args) {
+    this.events.map(item => item.apply(this, args));
+  }
   init(args) {
     this.store.contours.reducer("CONTOUR_ADD", {
       id: args.get("id"),
@@ -44,17 +51,19 @@ class Contour {
     });
   }
 
-  onChange(newData) {
-    log.cyan(`contour - onChange - Store ${this.store.data.get("id")}`);
-    log.white(log.json(newData, 6));
-    this.data = newData; // resolve(newData, this.store);
+  update(newData) {
+    log.action(`contour - update - Store ${this.store.data.get("id")}`);
+    this.data = this.store.contours.get(this.id);
+    log.data(log.json(this.data, 6));
+    this.emit(this);
   }
 
   set(obj) {
     this.store.contours.reducer("CONTOUR_ATTR", {
-      id: this.data.get("id"),
+      id: this.id,
       attr: obj
     });
+    this.update();
   }
 
   getset(key, param) {
@@ -98,6 +107,7 @@ class Contour {
   }
 
   resolve() {
+    console.log('resolve', this.data)
     return this.store.resolve(this.data);
   }
 

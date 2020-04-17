@@ -9,6 +9,7 @@ class Point {
   constructor(...args) {
     this.store = new Store();
     this.data = null;
+    this.events = [];
 
     let id = null;
     let argNew = null;
@@ -33,21 +34,30 @@ class Point {
       }
     }
 
-    this.store.register(id, newData => this.onChange(newData));
-
     this.init(argNew.merge({ id }));
+    this.id = id;
+    this.update();
 
     return this;
+  }
+
+  register(cb) {
+    this.events.push(cb);
+  }
+
+  emit(...args) {
+    this.events.map(item => item.apply(this, args));
   }
 
   init(args) {
     this.store.points.reducer("POINT_ADD", args);
   }
 
-  onChange(newData) {
-    log.yellow(`point - onChange - Store ${this.store.data.get("id")}`);
-    log.white(log.json(newData, 6));
-    this.data = newData;
+  update() {
+    log.action(`point - update - Store ${this.store.data.get("id")}`);
+    this.data = this.store.points.get(this.id);
+    log.data(log.json(this.data, 6));
+    this.emit(this);
   }
 
   set(obj) {
@@ -55,12 +65,13 @@ class Point {
       id: this.data.get("id"),
       attr: obj
     });
+    this.update();
   }
 
   getset(key, param) {
     if (param.length > 0) {
-      log.yellow(`point - set - Store ${this.store.data.get("id")}`);
-      log.white(log.pad(`${key}: ${param}`, 6));
+      log.action(`point - set - Store ${this.store.data.get("id")}`);
+      log.data(log.pad(`${key}: ${param}`, 6));
 
       this.set({ [key]: param[0] });
       return this;
@@ -79,7 +90,7 @@ class Point {
   $x() {
     return {
       type: "point",
-      id: this.id(),
+      id: this.id,
       attr: "x"
     };
   }
@@ -91,7 +102,7 @@ class Point {
   $y() {
     return {
       type: "point",
-      id: this.id(),
+      id: this.id,
       attr: "y"
     };
   }
@@ -117,7 +128,7 @@ class Point {
       x,
       y
     });
-
+    this.update();
     return this;
   }
 
@@ -132,6 +143,7 @@ class Point {
       y
     });
 
+    this.update();
     return this;
   }
 
