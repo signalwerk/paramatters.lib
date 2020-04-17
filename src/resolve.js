@@ -1,15 +1,5 @@
 import { isNumber } from "./util";
 
-let tempStore = null;
-
-// function s(store) {
-function point(id, key) {
-  let temp = tempStore.data.getIn(["points", id]).get(key);
-
-  console.log("----id", id, "---key", key, "---temp", temp);
-  return temp;
-}
-
 const evaluate = (val, store) => {
   if (isNumber(val)) {
     return val;
@@ -18,19 +8,14 @@ const evaluate = (val, store) => {
   switch (val.type) {
     case "point":
       return store.data.getIn(["points", val.id]).get(val.attr);
-      break;
     case "add":
       return evaluate(val.left, store) + evaluate(val.right, store);
-      break;
     case "sub":
       return evaluate(val.left, store) - evaluate(val.right, store);
-      break;
     case "mul":
       return evaluate(val.left, store) * evaluate(val.right, store);
-      break;
     case "div":
       return evaluate(val.left, store) / evaluate(val.right, store);
-      break;
     default:
       throw new Error(`evaluate error`, val);
   }

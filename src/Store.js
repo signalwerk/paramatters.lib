@@ -1,4 +1,4 @@
-import { List, Map } from "immutable";
+import { Map } from "immutable";
 import { uuid } from "./uuid";
 // import { defaultPoint, setAttr, move, scale } from "./PointUtil";
 import ContourStore from "./Contour/ContourStore";
@@ -42,7 +42,6 @@ class Store {
   resolve(item) {
     return resolve(item, this);
   }
-
 
   // merge(otherStore) {
   //   this.data = this.data.mergeDeep(otherStore.data);

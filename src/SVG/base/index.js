@@ -10,7 +10,7 @@ import get from "../../util/get";
 let Render = ({ data }, fontRenderer) => {
   return data.map(item => {
     return (
-      <Fragment>
+      <Fragment key={get(item, "id")}>
         {get(item, "type") === "circle" && Circle({ data: item.attributes })}
         {get(item, "type") === "polygon" && Polygon({ data: item.attributes })}
         {get(item, "type") === "contour" && Contour({ data: item })}
