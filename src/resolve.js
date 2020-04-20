@@ -5,17 +5,42 @@ const evaluate = (val, store) => {
     return val;
   }
 
+  // if (typeof val === "string" || val instanceof String) {
+  //   return parseFloat(val);
+  // }
+  // it's a string
+
   switch (val.type) {
-    case "point":
-      return store.data.getIn(["points", val.id]).get(val.attr);
+    case "pointRef":
+      return evaluate(
+        store.data.getIn(["points", val.data.id]).get(val.data.attr),
+        store
+      );
     case "add":
-      return evaluate(val.left, store) + evaluate(val.right, store);
+      return (
+        parseFloat(evaluate(val.left, store)) +
+        parseFloat(evaluate(val.right, store))
+      );
     case "sub":
-      return evaluate(val.left, store) - evaluate(val.right, store);
+      return (
+        parseFloat(evaluate(val.left, store)) -
+        parseFloat(evaluate(val.right, store))
+      );
     case "mul":
-      return evaluate(val.left, store) * evaluate(val.right, store);
+      return (
+        parseFloat(evaluate(val.left, store)) *
+        parseFloat(evaluate(val.right, store))
+      );
     case "div":
-      return evaluate(val.left, store) / evaluate(val.right, store);
+      return (
+        parseFloat(evaluate(val.left, store)) /
+        parseFloat(evaluate(val.right, store))
+      );
+    case "num":
+      return val.value;
+
+    case "group":
+      return evaluate(val.content, store);
     default:
       throw new Error(`evaluate error`, val);
   }
@@ -27,9 +52,11 @@ const resolveItem = (candidate, store) => {
 
     let x = p.get("x");
     let y = p.get("y");
+    console.log("orig x", x);
 
     if (!isNumber(x)) {
       x = evaluate(x, store);
+      console.log("resolve x", x);
     }
 
     if (!isNumber(y)) {
@@ -59,28 +86,30 @@ const resolveItem = (candidate, store) => {
   return null;
 };
 
+let wrapNumb = val => (isNumber(val) ? { type: "num", value: val } : val);
+
 const add = (left, right) => ({
   type: "add",
-  left,
-  right
+  left: wrapNumb(left),
+  right: wrapNumb(right)
 });
 
 const sub = (left, right) => ({
   type: "sub",
-  left,
-  right
+  left: wrapNumb(left),
+  right: wrapNumb(right)
 });
 
 const mul = (left, right) => ({
   type: "mul",
-  left,
-  right
+  left: wrapNumb(left),
+  right: wrapNumb(right)
 });
 
 const div = (left, right) => ({
   type: "div",
-  left,
-  right
+  left: wrapNumb(left),
+  right: wrapNumb(right)
 });
 export const Operators = {
   add,

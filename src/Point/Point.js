@@ -89,9 +89,8 @@ class Point {
   }
   $x() {
     return {
-      type: "point",
-      id: this.id,
-      attr: "x"
+      type: "pointRef",
+      data: { id: this.id, attr: "x" }
     };
   }
 
@@ -101,9 +100,8 @@ class Point {
 
   $y() {
     return {
-      type: "point",
-      id: this.id,
-      attr: "y"
+      type: "pointRef",
+      data: { id: this.id, attr: "y" }
     };
   }
 

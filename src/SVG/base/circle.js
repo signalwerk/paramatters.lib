@@ -1,9 +1,10 @@
 import React, { Fragment } from "react";
 
-export const Circle = ({ data }) => {
+export const Circle = ({ data, onClick }) => {
   return (
     <Fragment>
       <circle
+        onClick={onClick}
         cx={data.cx || 0}
         cy={data.cy || 0}
         r={data.r || 1}

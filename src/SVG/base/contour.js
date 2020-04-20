@@ -1,5 +1,7 @@
 import React, { Fragment } from "react";
 import { Renderer } from "../../";
+import get from "../../util/get";
+import { Circle } from "./circle";
 
 const PATH_PREFS = {
   stroke: "black",
@@ -7,7 +9,7 @@ const PATH_PREFS = {
   fill: "none"
 };
 
-export const Contour = ({ data }) => {
+export const Contour = ({ data, dispatch }) => {
   return (
     <Fragment>
       <path
@@ -16,6 +18,51 @@ export const Contour = ({ data }) => {
         fill={PATH_PREFS.fill}
         d={Renderer.ContourToSVG(data)}
       />
+
+      {get(data, "points").map(point => {
+        // case "offcurve":
+        //   offcurvePoints.push(`${get(point, "x")} ${get(point, "y")}`);
+        //   break;
+        // case "curve":
+        //   path.push(
+        //     `C${offcurvePoints.join(", ")}, ${get(point, "x")} ${get(point, "y")}`
+        //   );
+        //   offcurvePoints = [];
+        //   break;
+
+        switch (get(point, "type")) {
+          case "move":
+            return (
+              <Circle
+                data={{ cx: get(point, "x"), cy: get(point, "y"), r: 6 }}
+                onClick={e => {
+                  console.log("click", get(point, "id"));
+                  dispatch({
+                    type: "SELECT_POINT",
+                    payload: {
+                      id: get(point, "id")
+                    }
+                  });
+                }}
+              />
+            );
+          case "line":
+            return (
+              <Circle
+                data={{ cx: get(point, "x"), cy: get(point, "y"), r: 6 }}
+                onClick={e => {
+                  console.log("click", get(point, "id"));
+                  dispatch({
+                    type: "SELECT_POINT",
+                    payload: {
+                      id: get(point, "id")
+                    }
+                  });
+                }}
+              />
+            );
+        }
+      })}
     </Fragment>
   );
 };

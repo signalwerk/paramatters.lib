@@ -7,13 +7,13 @@ import { Contour } from "./contour";
 import { Group } from "./group";
 import get from "../../util/get";
 
-let Render = ({ data }, fontRenderer) => {
+let Render = ({ data, dispatch }, fontRenderer) => {
   return data.map(item => {
     return (
       <Fragment key={get(item, "id")}>
         {get(item, "type") === "circle" && Circle({ data: item.attributes })}
         {get(item, "type") === "polygon" && Polygon({ data: item.attributes })}
-        {get(item, "type") === "contour" && Contour({ data: item })}
+        {get(item, "type") === "contour" && Contour({ data: item, dispatch })}
         {get(item, "type") === "line" && Line({ data: item.attributes })}
         {get(item, "type") === "group" &&
           Group({ data: item.attributes }, fontRenderer)}

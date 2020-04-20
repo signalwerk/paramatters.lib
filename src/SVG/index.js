@@ -3,7 +3,7 @@ import Handler from "./base";
 import TextToSVG from "./base/text-ttf";
 import { decode } from "./base/base64";
 
-let Render = ({ data, fonts }) => {
+let Render = ({ data, dispatch, fonts }) => {
   const [fontRenderer, setFontRenderer] = useState(false);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ let Render = ({ data, fonts }) => {
     }
   }, [fonts]);
 
-  return <Fragment>{Handler({ data }, fontRenderer)}</Fragment>;
+  return <Fragment>{Handler({ data, dispatch }, fontRenderer)}</Fragment>;
 };
 
 export default Render;
