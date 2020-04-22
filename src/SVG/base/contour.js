@@ -61,6 +61,8 @@ export const Contour = ({ data, dispatch }) => {
                 }}
               />
             );
+          default:
+            return false;
         }
       })}
     </Fragment>
