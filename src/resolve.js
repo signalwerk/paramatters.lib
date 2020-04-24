@@ -1,5 +1,42 @@
 import { isNumber } from "./util";
 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math
+const evaluateFunc = (val, store) => {
+  if (val.type !== "func") {
+    throw new Error(`function evaluate error ${val.type}`, val);
+  }
+
+  switch (val.name) {
+    case "min":
+      return Math.min(...val.args.map(item => evaluate(item, store)));
+    case "max":
+      return Math.max(...val.args.map(item => evaluate(item, store)));
+    case "pow":
+      if (val.args.length !== 2) {
+        throw new Error(`function pow requires two arguments`, val);
+      }
+      return Math.pow(evaluate(val.args[0]), evaluate(val.args[1]));
+    case "abs":
+      if (val.args.length !== 1) {
+        throw new Error(`function abs requires one argument`, val);
+      }
+      return Math.abs(evaluate(val.args[0]));
+    case "sin":
+      if (val.args.length !== 1) {
+        throw new Error(`function sin requires one argument`, val);
+      }
+      return Math.sin(evaluate(val.args[0]));
+    case "cos":
+      if (val.args.length !== 1) {
+        throw new Error(`function cos requires one argument`, val);
+      }
+      return Math.cos(evaluate(val.args[0]));
+
+    default:
+      throw new Error(`function evaluate error ${val.type}`, val);
+  }
+};
+
 const evaluate = (val, store) => {
   if (isNumber(val)) {
     return val;
@@ -41,8 +78,12 @@ const evaluate = (val, store) => {
 
     case "group":
       return evaluate(val.content, store);
+
+    case "func":
+      return evaluateFunc(val, store);
+
     default:
-      throw new Error(`evaluate error`, val);
+      throw new Error(`evaluate error ${val.type}`, val);
   }
 };
 
