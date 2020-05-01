@@ -3,7 +3,9 @@ import { Map } from "immutable";
 import Store from "../Store";
 import { uuid } from "../uuid";
 import log from "../log";
-import { isNumber } from "../util";
+import { isNumber, isObject, pick } from "../util";
+
+const attr = ["x", "y", "type"];
 
 class Point {
   constructor(...args) {
@@ -11,31 +13,30 @@ class Point {
     this.data = null;
     this.events = [];
 
-    let id = null;
-    let argNew = null;
+    let argNew = Map();
 
     // init with x/y => new Point(x, y);
     if (args.length === 2 && isNumber(args[0]) && isNumber(args[1])) {
-      id = uuid();
-
-      argNew = Map({
-        id,
+      argNew = argNew.merge({
         x: args[0],
         y: args[1]
       });
     }
 
-    if (args.length <= 1) {
-      argNew = Map(args[0]);
-      if (argNew.get("forceId") === true) {
-        id = argNew.get("id");
-      } else {
-        id = uuid();
+    if (args.length === 1 && isObject(args[0])) {
+      argNew = argNew.merge(pick(args[0], attr));
+
+      if (args[0] && args[0].forceId && args[0].id) {
+        argNew = argNew.merge({ id: args[0].id });
       }
     }
 
-    this.init(argNew.merge({ id }));
-    this.id = id;
+    if (!argNew.get("id")) {
+      argNew = argNew.merge({ id: uuid() });
+    }
+
+    this.init(argNew);
+    this.id = argNew.get("id");
     this.update();
 
     return this;
@@ -146,7 +147,6 @@ class Point {
   }
 
   toString() {
-    console.log("-----toString", this.data);
     return JSON.stringify(this.data);
   }
 

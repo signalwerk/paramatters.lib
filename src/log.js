@@ -1,6 +1,6 @@
 // https://gist.github.com/davidgilbertson/6eae478d9a197bfa1b4dfbef38f787e5
 
-const debug = true;
+const debug = false;
 
 const log = {};
 log.pad = (str, padding) =>

@@ -42,7 +42,6 @@ class Child {
 
     item.register(() => this.parent.emit());
 
-    console.log("push itemId!", itemId);
     this.store.points.reducer("POINT_ADD", item.store.points.get(itemId));
 
     this.store.contours.reducer("CONTOUR_PUSH_POINT", {

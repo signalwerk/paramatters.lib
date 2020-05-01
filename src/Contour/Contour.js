@@ -1,9 +1,13 @@
 import { Map } from "immutable";
 import Store from "../Store";
 import { uuid } from "../uuid";
+import { isObject, pick } from "../util";
 import Child from "../child";
+import ArrayObserve from "../arrayObserve";
 import log from "../log";
 import Point from "../Point/Point";
+
+const attr = ["closed"];
 
 class Contour {
   constructor(...args) {
@@ -11,28 +15,31 @@ class Contour {
     this.data = null;
     this.events = [];
 
-    let id = null;
-    let argNew = null;
+    let argNew = Map();
 
-    if (args.length <= 1) {
-      argNew = Map(args[0]);
-      if (argNew.get("forceId") === true) {
-        id = argNew.get("id");
-      } else {
-        id = uuid();
+    if (args.length === 1 && isObject(args[0])) {
+      argNew = argNew.merge(pick(args[0], attr));
+
+      if (args[0] && args[0].forceId && args[0].id) {
+        argNew = argNew.merge({ id: args[0].id });
       }
     }
 
-    this.points = new Child({
-      parent: this,
-      parentType: "contour",
-      memeberType: "point",
-      getter: () => this.data.get("points"),
-      create: attr => new Point(attr.merge({ forceId: true }))
-    });
+    // this.points = new Child({
+    //   parent: this,
+    //   parentType: "contour",
+    //   memeberType: "point",
+    //   getter: () => this.data.get("points"),
+    //   create: props => new Point(props.merge({ forceId: true }))
+    // });
 
-    this.init(argNew.merge({ id }));
-    this.id = id
+    if (!argNew.get("id")) {
+      argNew = argNew.merge({ id: uuid() });
+    }
+
+    this.init(argNew);
+    this.initPoints();
+    this.id = argNew.get("id");
     this.update();
 
     return this;
@@ -107,13 +114,18 @@ class Contour {
   }
 
   resolve() {
-    console.log('resolve', this.data)
+    console.log("resolve", this.data);
     return this.store.resolve(this.data);
   }
 
   // copy a point without the events
   clone() {
     return new Contour(this.data);
+  }
+
+  initPoints() {
+    this._points = [];
+    this.points = new Proxy(this._points, ArrayObserve(this));
   }
 }
 

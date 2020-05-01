@@ -8,7 +8,7 @@ import resolve from "./resolve";
 class Store {
   constructor() {
     this.data = Map({
-      id: uuid(),
+      id: "default", //uuid(),
       type: "store",
       contours: Map(),
       points: Map(),
