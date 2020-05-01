@@ -2,10 +2,8 @@ import { Map } from "immutable";
 import Store from "../Store";
 import { uuid } from "../uuid";
 import { isObject, pick } from "../util";
-import Child from "../child";
 import ArrayObserve from "../arrayObserve";
 import log from "../log";
-import Point from "../Point/Point";
 
 const attr = ["closed"];
 
@@ -25,14 +23,6 @@ class Contour {
       }
     }
 
-    // this.points = new Child({
-    //   parent: this,
-    //   parentType: "contour",
-    //   memeberType: "point",
-    //   getter: () => this.data.get("points"),
-    //   create: props => new Point(props.merge({ forceId: true }))
-    // });
-
     if (!argNew.get("id")) {
       argNew = argNew.merge({ id: uuid() });
     }
@@ -44,6 +34,7 @@ class Contour {
 
     return this;
   }
+
   register(cb) {
     this.events.push(cb);
   }
@@ -51,6 +42,7 @@ class Contour {
   emit(...args) {
     this.events.map(item => item.apply(this, args));
   }
+
   init(args) {
     this.store.contours.reducer("CONTOUR_ADD", {
       id: args.get("id"),

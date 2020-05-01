@@ -1,5 +1,4 @@
 import { Map } from "immutable";
-import { uuid } from "./uuid";
 // import { defaultPoint, setAttr, move, scale } from "./PointUtil";
 import ContourStore from "./Contour/ContourStore";
 import PointStore from "./Point/PointStore";
@@ -8,7 +7,7 @@ import resolve from "./resolve";
 class Store {
   constructor() {
     this.data = Map({
-      id: "default", //uuid(),
+      id: "default",
       type: "store",
       contours: Map(),
       points: Map(),
