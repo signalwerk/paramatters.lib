@@ -49,7 +49,6 @@ class Child {
       pointId: itemId
     });
 
-
     item.setStore(this.store);
 
     this.parent.update();
