@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import get from "../util/get";
 import { POINT_STYLE } from "../Point/fPoint";
+import { uuid } from "../uuid";
 
 export const Contour = (points) => {
   return {
     element: "contour",
+    id: uuid(),
     points: points || [],
   };
 };
+
+
+
+
+
+
+
+
 
 export const C = function (points) {
   let data = {
@@ -33,7 +43,10 @@ export const C = function (points) {
 
 export const SVGPath = (contour) => {
   const d = SVGD(contour.points);
-  return <path d={d} />;
+  // return <path d={d} />;
+  return React.createElement("path", {
+    d,
+  });
   //
   // stroke={PATH_PREFS.stroke}
   // strokeWidth={PATH_PREFS.strokeWidth}
