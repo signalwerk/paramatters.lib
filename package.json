@@ -26,7 +26,7 @@
     "start": "npm run test:watch",
     "test:watch": "nodemon --watch src --watch tests --exec 'npm test'",
     "ftest:watch": "npx jest --watch",
-    "ftest": "jest",
+    "jest": "jest",
     "ftest": "mocha --compilers js:@babel/register -r reify -r source-map-support/register tests/**/*.spec.js",
     "test": "mocha -r reify -r source-map-support/register tests/**/*.test.js",
     "test:watch:point": "nodemon --watch src --watch tests --exec 'npm run test:point'",
