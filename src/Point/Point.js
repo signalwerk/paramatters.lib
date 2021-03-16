@@ -5,7 +5,7 @@ import { uuid } from "../uuid";
 import log from "../log";
 import { isNumber, isObject, pick } from "../util";
 
-const attr = ["x", "y", "type"];
+const attr = ["x", "y", "type", "selected"];
 
 class Point {
   constructor(...args) {
@@ -19,7 +19,7 @@ class Point {
     if (args.length === 2 && isNumber(args[0]) && isNumber(args[1])) {
       argNew = argNew.merge({
         x: args[0],
-        y: args[1]
+        y: args[1],
       });
     }
 
@@ -47,7 +47,7 @@ class Point {
   }
 
   emit(...args) {
-    this.events.map(item => item.apply(this, args));
+    this.events.map((item) => item.apply(this, args));
   }
 
   init(args) {
@@ -64,7 +64,7 @@ class Point {
   set(obj) {
     this.store.points.reducer("POINT_ATTR", {
       id: this.data.get("id"),
-      attr: obj
+      attr: obj,
     });
     this.update();
   }
@@ -85,13 +85,18 @@ class Point {
     return this.getset("type", args);
   }
 
+  selected(...args) {
+    console.log("--- select");
+    return this.getset("selected", args);
+  }
+
   x(...args) {
     return this.getset("x", args);
   }
   $x() {
     return {
       type: "pointRef",
-      data: { id: this.id, attr: "x" }
+      data: { id: this.id, attr: "x" },
     };
   }
 
@@ -102,7 +107,7 @@ class Point {
   $y() {
     return {
       type: "pointRef",
-      data: { id: this.id, attr: "y" }
+      data: { id: this.id, attr: "y" },
     };
   }
 
@@ -125,7 +130,7 @@ class Point {
     this.store.points.reducer("POINT_MOVE", {
       id: this.data.get("id"),
       x,
-      y
+      y,
     });
     this.update();
     return this;
@@ -139,7 +144,7 @@ class Point {
     this.store.points.reducer("POINT_SCALE", {
       id: this.data.get("id"),
       x,
-      y
+      y,
     });
 
     this.update();

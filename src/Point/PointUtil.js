@@ -7,10 +7,10 @@ export const PointType = {
   line: "line",
   offcurve: "offcurve",
   curve: "curve",
-  qcurve: "qcurve"
+  qcurve: "qcurve",
 };
 
-export const setKeys = Set(["x", "y", "type"]);
+export const setKeys = Set(["x", "y", "type", "selected"]);
 
 export const setAttr = (point, attr) => {
   const dataLoad = Map(attr).filter((val, key) => setKeys.has(key)); // pick
@@ -25,28 +25,29 @@ export const setAttr = (point, attr) => {
 export const move = (point, x, y) => {
   return point.merge({
     x: point.get("x") + x,
-    y: point.get("y") + y
+    y: point.get("y") + y,
   });
 };
 
 export const scale = (point, x, y) => {
   return point.merge({
     x: point.get("x") * x,
-    y: point.get("y") * y
+    y: point.get("y") * y,
   });
 };
 
-export const defaultPoint = id => {
+export const defaultPoint = (id) => {
   return Map({
     id: id || uuid(),
     type: PointType.none,
     x: 0.0,
-    y: 0.0
+    y: 0.0,
+    // selected: false,
   });
 };
 
 const all = {
-  defaultPoint
+  defaultPoint,
 };
 
 export default all;
