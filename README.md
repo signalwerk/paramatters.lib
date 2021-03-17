@@ -1,3 +1,4 @@
+# ⚠️👷‍♂️ This is work in progress… please don't use
 ## Scripts
 * **npm run build** to run eslint and build the es6 and es5 umd versions of your lib into `dist`
 * **npm test** to run tests
