@@ -6,10 +6,10 @@ const sideEffects = [
   "splice",
   "reverse",
   "sort",
-  "remove"
+  "remove",
 ];
 
-const ProxyArray = parent => {
+const ProxyArray = (parent) => {
   return {
     set(target, prop, val) {
       // console.log({target, prop, val})
@@ -25,7 +25,7 @@ const ProxyArray = parent => {
       const val = target[prop];
       if (typeof val === "function") {
         if (["push"].includes(prop)) {
-          return item => {
+          return (item) => {
             const itemId = item.id;
 
             item.register(() => parent.emit());
@@ -38,7 +38,7 @@ const ProxyArray = parent => {
 
             parent.store.contours.reducer("CONTOUR_PUSH_POINT", {
               id: parent.id,
-              pointId: itemId
+              pointId: itemId,
             });
 
             item.setStore(parent.store);
@@ -62,7 +62,7 @@ const ProxyArray = parent => {
         return val.bind(target);
       }
       return val;
-    }
+    },
   };
 };
 

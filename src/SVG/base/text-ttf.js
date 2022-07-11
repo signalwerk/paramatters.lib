@@ -8,7 +8,8 @@
 
 import * as opentype from "opentype.js";
 
-const DEFAULT_FONT = require("path").join(__dirname, "../fonts/ipag.ttf");
+// const DEFAULT_FONT = require("path").join(__dirname, "../fonts/ipag.ttf");
+const DEFAULT_FONT = "../fonts/ipag.ttf";
 
 // Private method
 
@@ -134,7 +135,7 @@ export default class TextToSVG {
       width,
       height,
       ascender,
-      descender
+      descender,
     };
   }
 
@@ -164,7 +165,7 @@ export default class TextToSVG {
 
   getPath(text, options = {}) {
     const attributes = Object.keys(options.attributes || {})
-      .map(key => `${key}="${options.attributes[key]}"`)
+      .map((key) => `${key}="${options.attributes[key]}"`)
       .join(" ");
     const d = this.getD(text, options);
 
@@ -192,11 +193,11 @@ export default class TextToSVG {
     const metrics = this.getMetrics(text, options);
     const box = {
       width: Math.max(metrics.x + metrics.width, 0) - Math.min(metrics.x, 0),
-      height: Math.max(metrics.y + metrics.height, 0) - Math.min(metrics.y, 0)
+      height: Math.max(metrics.y + metrics.height, 0) - Math.min(metrics.y, 0),
     };
     const origin = {
       x: box.width - Math.max(metrics.x + metrics.width, 0),
-      y: box.height - Math.max(metrics.y + metrics.height, 0)
+      y: box.height - Math.max(metrics.y + metrics.height, 0),
     };
 
     // Shift text based on origin

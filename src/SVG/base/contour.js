@@ -44,7 +44,7 @@ export const Contour = ({ data, dispatch }) => {
                 onClick={(e) => {
                   console.log("click", get(point, "id"));
                   dispatch({
-                    type: "SELECT_POINTS",
+                    type: "CLICK_POINT",
                     payload: {
                       ids: [get(point, "id")],
                     },
@@ -64,7 +64,7 @@ export const Contour = ({ data, dispatch }) => {
                 onClick={(e) => {
                   console.log("click", get(point, "id"));
                   dispatch({
-                    type: "SELECT_POINTS",
+                    type: "CLICK_POINT",
                     payload: {
                       ids: [get(point, "id")],
                     },
