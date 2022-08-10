@@ -16,7 +16,7 @@ class TokenizerError extends Error {
   }
 }
 
-const Tokenizer = inStr => {
+const Tokenizer = (inStr) => {
   let tokens = [];
   let str = inStr.trim();
   var s = "";
@@ -25,57 +25,57 @@ const Tokenizer = inStr => {
     s += str[index];
     const peek = str[index + 1];
     if (isNum(s.trim()) && !isNum(peek)) {
-      tokens.push({ type: "num", value: s.trim() });
+      tokens.push({ __type: "num", value: s.trim() });
       s = "";
       continue;
     }
 
     if (isAlpha(s.trim()) && !isAlpha(peek)) {
-      tokens.push({ type: "alpha", value: s.trim() });
+      tokens.push({ __type: "alpha", value: s.trim() });
       s = "";
       continue;
     }
 
     if (s.trim() === "(") {
-      tokens.push({ type: "lparen" });
+      tokens.push({ __type: "lparen" });
       s = "";
       continue;
     }
 
     if (s.trim() === ")") {
-      tokens.push({ type: "rparen" });
+      tokens.push({ __type: "rparen" });
       s = "";
       continue;
     }
 
     if (s.trim() === ",") {
-      tokens.push({ type: "coma" });
+      tokens.push({ __type: "coma" });
       s = "";
       continue;
     }
 
     if (s.trim() === "+") {
-      tokens.push({ type: "add" });
+      tokens.push({ __type: "add" });
       s = "";
       continue;
     }
     if (s.trim() === "*" || s.trim() === "×") {
-      tokens.push({ type: "mul" });
+      tokens.push({ __type: "mul" });
       s = "";
       continue;
     }
     if (s.trim() === "/" || s.trim() === "÷") {
-      tokens.push({ type: "div" });
+      tokens.push({ __type: "div" });
       s = "";
       continue;
     }
     if (s.trim() === "+") {
-      tokens.push({ type: "add" });
+      tokens.push({ __type: "add" });
       s = "";
       continue;
     }
     if (s.trim() === "-" || s.trim() === "–") {
-      tokens.push({ type: "sub" });
+      tokens.push({ __type: "sub" });
       s = "";
       continue;
     }

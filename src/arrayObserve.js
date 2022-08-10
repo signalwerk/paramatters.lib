@@ -30,7 +30,7 @@ const ProxyArray = (parent) => {
 
             item.register(() => parent.emit());
 
-            console.log("push itemId!", itemId);
+            // console.log("push itemId!", itemId);
             parent.store.points.reducer(
               "POINT_ADD",
               item.store.points.get(itemId)

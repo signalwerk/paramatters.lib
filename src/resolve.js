@@ -8,9 +8,9 @@ const evaluateFunc = (val, store) => {
 
   switch (val.name) {
     case "min":
-      return Math.min(...val.args.map(item => evaluate(item, store)));
+      return Math.min(...val.args.map((item) => evaluate(item, store)));
     case "max":
-      return Math.max(...val.args.map(item => evaluate(item, store)));
+      return Math.max(...val.args.map((item) => evaluate(item, store)));
     case "pow":
       if (val.args.length !== 2) {
         throw new Error(`function pow requires two arguments`, val);
@@ -93,11 +93,11 @@ const resolveItem = (candidate, store) => {
 
     let x = p.get("x");
     let y = p.get("y");
-    console.log("orig x", x);
+    // console.log("orig x", x);
 
     if (!isNumber(x)) {
       x = evaluate(x, store);
-      console.log("resolve x", x);
+      // console.log("resolve x", x);
     }
 
     if (!isNumber(y)) {
@@ -106,57 +106,57 @@ const resolveItem = (candidate, store) => {
 
     return p.merge({
       x,
-      y
+      y,
     });
   }
 
   if (candidate.get("type") === "contour") {
     return candidate.merge({
-      points: candidate.get("points").map(item => {
+      points: candidate.get("points").map((item) => {
         return resolveItem(item, store);
-      })
+      }),
     });
   }
   if (candidate.get("type") === "store") {
     return candidate.merge({
-      contours: candidate.get("contours").map(item => {
+      contours: candidate.get("contours").map((item) => {
         return resolveItem(item, store);
-      })
+      }),
     });
   }
   return null;
 };
 
-let wrapNumb = val => (isNumber(val) ? { type: "num", value: val } : val);
+let wrapNumb = (val) => (isNumber(val) ? { type: "num", value: val } : val);
 
 const add = (left, right) => ({
   type: "add",
   left: wrapNumb(left),
-  right: wrapNumb(right)
+  right: wrapNumb(right),
 });
 
 const sub = (left, right) => ({
   type: "sub",
   left: wrapNumb(left),
-  right: wrapNumb(right)
+  right: wrapNumb(right),
 });
 
 const mul = (left, right) => ({
   type: "mul",
   left: wrapNumb(left),
-  right: wrapNumb(right)
+  right: wrapNumb(right),
 });
 
 const div = (left, right) => ({
   type: "div",
   left: wrapNumb(left),
-  right: wrapNumb(right)
+  right: wrapNumb(right),
 });
 export const Operators = {
   add,
   sub,
   mul,
-  div
+  div,
 };
 
 export default resolveItem;

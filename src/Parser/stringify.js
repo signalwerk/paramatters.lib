@@ -4,7 +4,7 @@ import Parser from "./parser";
 const add = (iterator, ast) => {
   let { type, ...payload } = ast;
   let lastIndex = iterator.tokens.length - 1;
-  let lastType = iterator.tokens[lastIndex].type;
+  let lastType = iterator.tokens[lastIndex].__type;
 
   if (type === "text" && lastType === type) {
     iterator.tokens[lastIndex].value += payload.value;
@@ -14,69 +14,73 @@ const add = (iterator, ast) => {
 };
 
 const Walker = (iterator, ast) => {
-  switch (ast.type) {
+  if (typeof ast !== "object") {
+    add(iterator, { __type: "text", value: `${ast}` });
+    return;
+  }
+  switch (ast.__type) {
     case "num":
-      add(iterator, { type: "text", value: `${ast.value}` });
+      add(iterator, { __type: "text", value: `${ast.value}` });
       break;
 
     case "add":
       Walker(iterator, ast.left);
-      add(iterator, { type: "text", value: " + " });
+      add(iterator, { __type: "text", value: " + " });
       Walker(iterator, ast.right);
       break;
 
     case "sub":
       Walker(iterator, ast.left);
-      add(iterator, { type: "text", value: " - " });
+      add(iterator, { __type: "text", value: " - " });
       Walker(iterator, ast.right);
       break;
 
     case "mul":
       Walker(iterator, ast.left);
-      add(iterator, { type: "text", value: " * " });
+      add(iterator, { __type: "text", value: " * " });
       Walker(iterator, ast.right);
       break;
 
     case "div":
       Walker(iterator, ast.left);
-      add(iterator, { type: "text", value: " / " });
+      add(iterator, { __type: "text", value: " / " });
       Walker(iterator, ast.right);
       break;
 
     case "group":
-      add(iterator, { type: "text", value: "(" });
+      add(iterator, { __type: "text", value: "(" });
       Walker(iterator, ast.content);
-      add(iterator, { type: "text", value: ")" });
+      add(iterator, { __type: "text", value: ")" });
       break;
 
-    case "pointRef":
+    case "ref":
       add(iterator, ast);
       // Walker(iterator, ast);
       break;
 
     case "func":
-      add(iterator, { type: "text", value: `${ast.name}(` });
+      add(iterator, { __type: "text", value: `${ast.name}(` });
       ast.args.forEach((item, index, arr) => {
         Walker(iterator, item);
         if (index < arr.length - 1) {
-          add(iterator, { type: "text", value: ", " });
+          add(iterator, { __type: "text", value: ", " });
         }
       });
-      add(iterator, { type: "text", value: ")" });
+      add(iterator, { __type: "text", value: ")" });
       break;
 
     default:
-      return `⚠️ AST ${iterator.type}`;
+      return `⚠️ AST ${iterator.__type}`;
   }
 };
 
-const Stringify = ast => {
+const Stringify = (ast) => {
   if (!ast) {
     return;
   }
 
   const iterator = {
-    tokens: [{ type: "text", value: "" }]
+    tokens: [{ __type: "text", value: "" }],
   };
 
   Walker(iterator, ast);
@@ -84,64 +88,76 @@ const Stringify = ast => {
   return iterator.tokens;
 };
 
-export const TokenToStr = tokens => {
+export const TokenToStr = (tokens) => {
   if (!tokens) {
     return "";
   }
-  return tokens.map(item => item.value).join("");
+  return tokens.map((item) => item.value).join("");
 };
 
-export const SlateToExpr = slate => {
+export const SlateToExpr = (slate) => {
   const tokens = [];
+  console.log("SlateToExpr start", slate);
   if (slate.length) {
-    slate.forEach(item => {
+    slate.forEach((item) => {
       switch (item.type) {
         case "text":
+          console.log("SlateToExpr Tokenizer start");
           tokens.push(...Tokenizer(item.children[0].text));
+          console.log("SlateToExpr Tokenizer end");
           break;
-        case "pointRef":
+        case "ref":
+          console.log("SlateToExpr Tokenizer ref", item);
           tokens.push({
-            type: item.type,
-            data: { id: item.data.id, attr: item.data.attr }
+            __type: item.type,
+            id: item.data.id,
+            type: item.data.type,
+            attribute: item.data.attribute,
           });
           break;
         default:
       }
     });
   }
-
+  console.log("SlateToExpr end", tokens);
+  tokens.push({
+    __type: "eof",
+  });
   return Parser(tokens);
 };
 
-export const TokenToSlate = tokens => {
+export const TokenToSlate = (tokens) => {
   if (!tokens) {
     return [
       {
         type: "text",
         children: [
           {
-            text: ""
-          }
-        ]
-      }
+            text: "",
+          },
+        ],
+      },
     ];
   }
-  return tokens.map(item => {
-    switch (item.type) {
+  return tokens.map((item) => {
+    switch (item.__type) {
       case "text":
         return {
           type: "text",
           children: [
             {
-              text: item.value
-            }
-          ]
+              text: item.value,
+            },
+          ],
         };
 
-      case "pointRef":
+      case "ref":
         return {
-          ...item,
-          children: [{ text: "" }]
+          type: "ref",
+          data: {
+            ...item,
+          },
+          children: [{ text: "" }],
         };
 
       default:
@@ -149,9 +165,9 @@ export const TokenToSlate = tokens => {
           type: "text",
           children: [
             {
-              text: `⚠️ AST ${item.type}`
-            }
-          ]
+              text: `⚠️ AST ${item.__type}`,
+            },
+          ],
         };
     }
   });

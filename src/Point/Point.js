@@ -86,7 +86,7 @@ class Point {
   }
 
   selected(...args) {
-    console.log("--- select");
+    // console.log("--- select");
     return this.getset("selected", args);
   }
 

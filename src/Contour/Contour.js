@@ -40,13 +40,13 @@ class Contour {
   }
 
   emit(...args) {
-    this.events.map(item => item.apply(this, args));
+    this.events.map((item) => item.apply(this, args));
   }
 
   init(args) {
     this.store.contours.reducer("CONTOUR_ADD", {
       id: args.get("id"),
-      attr: args
+      attr: args,
     });
   }
 
@@ -60,7 +60,7 @@ class Contour {
   set(obj) {
     this.store.contours.reducer("CONTOUR_ATTR", {
       id: this.id,
-      attr: obj
+      attr: obj,
     });
     this.update();
   }
@@ -106,7 +106,7 @@ class Contour {
   }
 
   resolve() {
-    console.log("resolve", this.data);
+    // console.log("resolve", this.data);
     return this.store.resolve(this.data);
   }
 
