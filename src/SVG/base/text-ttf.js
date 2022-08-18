@@ -39,7 +39,6 @@ export default class TextToSVG {
   }
 
   static load(url, cb) {
-    console.log("----load url", url);
     opentype.load(url, (err, font) => {
       if (err !== null) {
         return cb(err, null);

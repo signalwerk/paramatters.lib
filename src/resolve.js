@@ -93,11 +93,9 @@ const resolveItem = (candidate, store) => {
 
     let x = p.get("x");
     let y = p.get("y");
-    // console.log("orig x", x);
 
     if (!isNumber(x)) {
       x = evaluate(x, store);
-      // console.log("resolve x", x);
     }
 
     if (!isNumber(y)) {

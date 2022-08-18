@@ -4,7 +4,7 @@ import Parser from "./parser";
 const add = (iterator, ast) => {
   let { type, ...payload } = ast;
   let lastIndex = iterator.tokens.length - 1;
-  let lastType = iterator.tokens[lastIndex].__type;
+  let lastType = iterator.tokens[lastIndex]?.__type;
 
   if (type === "text" && lastType === type) {
     iterator.tokens[lastIndex].value += payload.value;
@@ -80,7 +80,9 @@ const Stringify = (ast) => {
   }
 
   const iterator = {
-    tokens: [{ __type: "text", value: "" }],
+    tokens: [
+      // { __type: "text", value: "" }
+    ],
   };
 
   Walker(iterator, ast);
@@ -97,17 +99,13 @@ export const TokenToStr = (tokens) => {
 
 export const SlateToExpr = (slate) => {
   const tokens = [];
-  console.log("SlateToExpr start", slate);
   if (slate.length) {
     slate.forEach((item) => {
       switch (item.type) {
         case "text":
-          console.log("SlateToExpr Tokenizer start");
           tokens.push(...Tokenizer(item.children[0].text));
-          console.log("SlateToExpr Tokenizer end");
           break;
         case "ref":
-          console.log("SlateToExpr Tokenizer ref", item);
           tokens.push({
             __type: item.type,
             id: item.data.id,
@@ -119,7 +117,6 @@ export const SlateToExpr = (slate) => {
       }
     });
   }
-  console.log("SlateToExpr end", tokens);
   tokens.push({
     __type: "eof",
   });

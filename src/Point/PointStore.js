@@ -59,7 +59,7 @@ class PointStore {
         break;
 
       default: {
-        console.log("no default");
+        console.error("no default");
       }
     }
   }

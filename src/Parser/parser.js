@@ -8,7 +8,10 @@ const parse = (iterator) => {
 
 const exp = (iterator) => {
   const left = term(iterator);
-  if (current(iterator).__type === "add" || current(iterator).__type === "sub") {
+  if (
+    current(iterator).__type === "add" ||
+    current(iterator).__type === "sub"
+  ) {
     return {
       ...consume(iterator),
       left,
@@ -20,7 +23,10 @@ const exp = (iterator) => {
 
 const term = (iterator) => {
   const left = func(iterator);
-  if (current(iterator).__type === "mul" || current(iterator).__type === "div") {
+  if (
+    current(iterator).__type === "mul" ||
+    current(iterator).__type === "div"
+  ) {
     return {
       ...consume(iterator),
       left,
@@ -78,7 +84,6 @@ const digit = (iterator) => {
 };
 
 const Parser = (tokens, options) => {
-  console.log("Parser", tokens);
   const iterator = {
     access: function (i) {
       return this.load[i];

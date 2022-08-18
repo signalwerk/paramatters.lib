@@ -42,7 +42,6 @@ export const Contour = ({ data, dispatch }) => {
                 }}
                 fill={get(point, "selected") ? "red" : "green"}
                 onClick={(e) => {
-                  // console.log("click", get(point, "id"));
                   dispatch({
                     type: "CLICK_POINT",
                     payload: {
@@ -62,7 +61,6 @@ export const Contour = ({ data, dispatch }) => {
                   fill: get(point, "selected") ? "red" : "green",
                 }}
                 onClick={(e) => {
-                  // console.log("click", get(point, "id"));
                   dispatch({
                     type: "CLICK_POINT",
                     payload: {
