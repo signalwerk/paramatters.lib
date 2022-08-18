@@ -31,19 +31,19 @@ const Walker = (iterator, ast) => {
 
     case "sub":
       Walker(iterator, ast.left);
-      add(iterator, { __type: "text", value: " - " });
+      add(iterator, { __type: "text", value: " – " });
       Walker(iterator, ast.right);
       break;
 
     case "mul":
       Walker(iterator, ast.left);
-      add(iterator, { __type: "text", value: " * " });
+      add(iterator, { __type: "text", value: " × " });
       Walker(iterator, ast.right);
       break;
 
     case "div":
       Walker(iterator, ast.left);
-      add(iterator, { __type: "text", value: " / " });
+      add(iterator, { __type: "text", value: " ÷ " });
       Walker(iterator, ast.right);
       break;
 
@@ -97,12 +97,17 @@ export const TokenToStr = (tokens) => {
   return tokens.map((item) => item.value).join("");
 };
 
+function removeZeroWidth(str) {
+  return str.replaceAll("/u200B", "");
+}
+
 export const SlateToExpr = (slate) => {
   const tokens = [];
   if (slate.length) {
     slate.forEach((item) => {
       switch (item.type) {
         case "text":
+          console.log("processing: ", item.children[0].text);
           tokens.push(...Tokenizer(item.children[0].text));
           break;
         case "ref":
@@ -136,7 +141,8 @@ export const TokenToSlate = (tokens) => {
       },
     ];
   }
-  return tokens.map((item) => {
+
+  let state = tokens.map((item) => {
     switch (item.__type) {
       case "text":
         return {
@@ -168,6 +174,30 @@ export const TokenToSlate = (tokens) => {
         };
     }
   });
+
+  // return state;
+
+  return [
+    {
+      type: "text",
+      children: [
+        {
+          // text: "",
+          text: "\u200B",
+        },
+      ],
+    },
+    ...state,
+    {
+      type: "text",
+      children: [
+        {
+          // text: "",
+          text: " ",
+        },
+      ],
+    },
+  ];
 };
 
 export default Stringify;

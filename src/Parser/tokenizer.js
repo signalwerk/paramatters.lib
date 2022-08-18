@@ -18,7 +18,7 @@ class TokenizerError extends Error {
 
 const Tokenizer = (inStr) => {
   let tokens = [];
-  let str = inStr.trim();
+  let str = inStr.replaceAll("\u200B", "").trim();
   var s = "";
 
   for (var index = 0; index < str.length; index++) {
@@ -50,12 +50,6 @@ const Tokenizer = (inStr) => {
 
     if (s.trim() === ",") {
       tokens.push({ __type: "coma" });
-      s = "";
-      continue;
-    }
-
-    if (s.trim() === "+") {
-      tokens.push({ __type: "add" });
       s = "";
       continue;
     }
