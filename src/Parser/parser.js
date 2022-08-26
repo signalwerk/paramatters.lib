@@ -79,7 +79,7 @@ const digit = (iterator) => {
   } else if (current(iterator).__type === "reference") {
     return consume(iterator);
   } else {
-    throw new Error(`Expected a num got '${current(iterator).__type}'`);
+    // throw new Error(`Expected a num got '${current(iterator).__type}'`);
   }
 };
 
