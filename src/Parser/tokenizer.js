@@ -18,7 +18,11 @@ class TokenizerError extends Error {
 
 const Tokenizer = (inStr) => {
   let tokens = [];
-  let str = inStr.replaceAll("\u200B", "").trim();
+  let str = inStr
+    .replaceAll("\u200B", "")
+    .replaceAll("\r", "")
+    .replaceAll("\n", "")
+    .trim();
   var s = "";
 
   for (var index = 0; index < str.length; index++) {
