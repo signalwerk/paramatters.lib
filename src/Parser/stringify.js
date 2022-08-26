@@ -53,7 +53,7 @@ const Walker = (iterator, ast) => {
       add(iterator, { __type: "text", value: ")" });
       break;
 
-    case "ref":
+    case "reference":
       add(iterator, ast);
       // Walker(iterator, ast);
       break;
@@ -107,10 +107,9 @@ export const SlateToExpr = (slate) => {
     slate.forEach((item) => {
       switch (item.type) {
         case "text":
-          console.log("processing: ", item.children[0].text);
           tokens.push(...Tokenizer(item.children[0].text));
           break;
-        case "ref":
+        case "reference":
           tokens.push({
             __type: item.type,
             id: item.data.id,
@@ -154,9 +153,9 @@ export const TokenToSlate = (tokens) => {
           ],
         };
 
-      case "ref":
+      case "reference":
         return {
-          type: "ref",
+          type: "reference",
           data: {
             ...item,
           },
