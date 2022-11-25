@@ -4,8 +4,8 @@
 
 // https://www.w3.org/TR/SVG/paths.html
 
-import Point from "../Point/Point";
-import Contour from "./Contour";
+// import Point from "../Point/Point";
+// import Contour from "./Contour";
 
 class SVGParser {
   consumeWhitespace() {
@@ -64,22 +64,26 @@ class SVGParser {
   calcPoint(isRelative, x, y) {
     let p = {
       x: x || this.current.x,
-      y: y || this.current.y
+      y: y || this.current.y,
     };
 
     if (isRelative) {
       this.current = {
         x: this.current.x + p.x,
-        y: this.current.y + p.y
+        y: this.current.y + p.y,
       };
     } else {
       this.current = {
         x: p.x,
-        y: p.y
+        y: p.y,
       };
     }
 
     return this.current;
+  }
+
+  debug(msg) {
+    console.log(msg);
   }
 
   parseSegment() {
@@ -88,7 +92,7 @@ class SVGParser {
     this.consumeWhitespace();
 
     if (this.pos >= this.length) {
-      console.log("reach end");
+      this.debug("reach end");
       return;
     }
 
@@ -106,9 +110,9 @@ class SVGParser {
 
         p1 = this.calcPoint(isRelative, this.numbers[0], this.numbers[1]);
 
-        console.log("move to", {
+        this.debug("move to", {
           x: p1.x,
-          y: p1.y
+          y: p1.y,
         });
 
         this.parseSegment();
@@ -119,9 +123,9 @@ class SVGParser {
 
         p1 = this.calcPoint(isRelative, this.numbers[0], this.numbers[1]);
 
-        console.log("line to", {
+        this.debug("line to", {
           x: p1.x,
-          y: p1.y
+          y: p1.y,
         });
 
         this.parseSegment();
@@ -134,13 +138,13 @@ class SVGParser {
         p2 = this.calcPoint(isRelative, this.numbers[2], this.numbers[3]);
         p3 = this.calcPoint(isRelative, this.numbers[4], this.numbers[5]);
 
-        console.log("c to", {
+        this.debug("c to", {
           x1: p1.x,
           y1: p1.y,
           x2: p2.x,
           y2: p2.y,
           x3: p3.x,
-          y3: p3.y
+          y3: p3.y,
         });
 
         this.parseSegment();
@@ -152,11 +156,11 @@ class SVGParser {
         p1 = this.calcPoint(isRelative, this.numbers[0], this.numbers[1]);
         p2 = this.calcPoint(isRelative, this.numbers[2], this.numbers[3]);
 
-        console.log("s to", {
+        this.debug("s to", {
           x1: p1.x,
           y1: p1.y,
           x2: p2.x,
-          y2: p2.y
+          y2: p2.y,
         });
 
         this.parseSegment();
@@ -167,9 +171,9 @@ class SVGParser {
 
         p1 = this.calcPoint(isRelative, this.numbers[0]);
 
-        console.log("h to", {
+        this.debug("h to", {
           x1: p1.x,
-          y1: p1.y
+          y1: p1.y,
         });
 
         this.parseSegment();
@@ -180,15 +184,15 @@ class SVGParser {
 
         p1 = this.calcPoint(isRelative, null, this.numbers[0]);
 
-        console.log("h to", {
+        this.debug("h to", {
           x1: p1.x,
-          y1: p1.y
+          y1: p1.y,
         });
 
         this.parseSegment();
         break;
       case "z":
-        console.log("z");
+        this.debug("z close");
 
         this.parseSegment();
         break;
@@ -204,7 +208,7 @@ class SVGParser {
     this.current = { x: 0, y: 0 };
 
     this.parseSegment();
-    console.log("---end");
+    this.debug("---end");
   }
 }
 

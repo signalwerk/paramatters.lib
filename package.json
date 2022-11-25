@@ -4,7 +4,7 @@
   "author": "Stefan Huber, Signalwerk GmbH",
   "license": "MIT",
   "description": "Library for parametric vector graphics",
-  "main": "dist/lib.umd.js",
+  "main": "./src/index.js",
   "jsnext:main": "dist/lib.es6.js",
   "module": "dist/lib.es6.js",
   "repository": {
@@ -25,6 +25,9 @@
     "build": "rollup -c",
     "start": "npm run test:watch",
     "test:watch": "nodemon --watch src --watch tests --exec 'npm test'",
+    "ftest:watch": "npx jest --watch",
+    "jest": "jest",
+    "ftest": "mocha --compilers js:@babel/register -r reify -r source-map-support/register tests/**/*.spec.js",
     "test": "mocha -r reify -r source-map-support/register tests/**/*.test.js",
     "test:watch:point": "nodemon --watch src --watch tests --exec 'npm run test:point'",
     "test:watch:contour": "nodemon --watch src --watch tests --exec 'npm run test:contour'",
@@ -34,24 +37,34 @@
     "test:browser": "npm run build && opn http://127.0.0.1:8080/tests/ && serve -p 8080"
   },
   "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.1",
+    "@babel/register": "^7.12.1",
+    "babel-jest": "^26.6.2",
+    "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "eslint": "^5.0.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-config-prettier": "^4.2.0",
+    "jest": "^26.6.2",
     "mocha": "^5.2.0",
     "nodemon": "^1.17.5",
     "opn-cli": "^3.1.0",
+    "react-test-renderer": "^17.0.1",
     "reify": "^0.16.2",
     "rollup": "^0.61.2",
     "rollup-plugin-buble": "^0.19.2",
     "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-multi-entry": "^2.0.2",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "serve": "^9.1.0",
+    "serve": "^10.1.2",
     "source-map-support": "^0.5.6"
   },
   "dependencies": {
-    "immutable": "^4.0.0-rc.12",
-    "chai-uuid": "^1.0.6"
+    "chai-uuid": "^1.0.6",
+    "immutable": "^4.0.0-rc.12"
   }
 }

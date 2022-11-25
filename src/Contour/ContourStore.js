@@ -1,8 +1,4 @@
-import {
-  defaultContour,
-  setAttr,
-  pointPush,
-} from "./ContourUtil";
+import { defaultContour, setAttr, pointPush } from "./ContourUtil";
 
 class ContourStore {
   constructor(props) {
@@ -26,33 +22,30 @@ class ContourStore {
       .merge(load)
       .merge({ id });
     this.set(id, newContour);
-    this.store().emit(id, newContour);
   }
 
   attrContour(id, attr) {
     const newContour = setAttr(this.get(id), attr);
     this.set(id, newContour);
-    this.store().emit(id, newContour);
   }
 
   pointPush(id, pointId) {
     const newContour = pointPush(this.get(id), pointId);
     this.set(id, newContour);
-    this.store().emit(id, newContour);
   }
 
   // movePoint(id, load) {
   //   const { data } = this;
   //   const newContour = move(data.get(id), load.x, load.y);
   //   this.data = data.mergeDeep(data, { [id]: newContour });
-  //   this.eventHandler.emit(id, newContour);
+  //   this.eventHandler.emit("contours", id, newContour);
   // }
   //
   // scalePoint(id, load) {
   //   const { data } = this;
   //   const newContour = scale(data.get(id), load.x, load.y);
   //   this.data = data.mergeDeep(data, { [id]: newContour });
-  //   this.eventHandler.emit(id, newContour);
+  //   this.eventHandler.emit("contours", id, newContour);
   // }
 
   reducer(action, load) {

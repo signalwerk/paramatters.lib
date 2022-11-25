@@ -3,64 +3,76 @@ import { Map } from "immutable";
 import Store from "../Store";
 import { uuid } from "../uuid";
 import log from "../log";
-import { isNumber } from "../util";
+import { isNumber, isObject, pick } from "../util";
+
+const attr = ["x", "y", "type", "selected"];
 
 class Point {
   constructor(...args) {
     this.store = new Store();
     this.data = null;
+    this.events = [];
 
-    let id = null;
-    let argNew = null;
+    let argNew = Map();
 
     // init with x/y => new Point(x, y);
     if (args.length === 2 && isNumber(args[0]) && isNumber(args[1])) {
-      id = uuid();
-
-      argNew = Map({
-        id,
+      argNew = argNew.merge({
         x: args[0],
-        y: args[1]
+        y: args[1],
       });
     }
 
-    if (args.length <= 1) {
-      argNew = Map(args[0]);
-      if (argNew.get("forceId") === true) {
-        id = argNew.get("id");
-      } else {
-        id = uuid();
+    if (args.length === 1 && isObject(args[0])) {
+      argNew = argNew.merge(pick(args[0], attr));
+
+      if (args[0] && args[0].forceId && args[0].id) {
+        argNew = argNew.merge({ id: args[0].id });
       }
     }
 
-    this.store.register(id, newData => this.onChange(newData));
+    if (!argNew.get("id")) {
+      argNew = argNew.merge({ id: uuid() });
+    }
 
-    this.init(argNew.merge({ id }));
+    this.init(argNew);
+    this.id = argNew.get("id");
+    this.update();
 
     return this;
+  }
+
+  register(cb) {
+    this.events.push(cb);
+  }
+
+  emit(...args) {
+    this.events.map((item) => item.apply(this, args));
   }
 
   init(args) {
     this.store.points.reducer("POINT_ADD", args);
   }
 
-  onChange(newData) {
-    log.yellow(`point - onChange - Store ${this.store.data.get("id")}`);
-    log.white(log.json(newData, 6));
-    this.data = newData;
+  update() {
+    log.action(`point - update - Store ${this.store.data.get("id")}`);
+    this.data = this.store.points.get(this.id);
+    log.data(log.json(this.data, 6));
+    this.emit(this);
   }
 
   set(obj) {
     this.store.points.reducer("POINT_ATTR", {
       id: this.data.get("id"),
-      attr: obj
+      attr: obj,
     });
+    this.update();
   }
 
   getset(key, param) {
     if (param.length > 0) {
-      log.yellow(`point - set - Store ${this.store.data.get("id")}`);
-      log.white(log.pad(`${key}: ${param}`, 6));
+      log.action(`point - set - Store ${this.store.data.get("id")}`);
+      log.data(log.pad(`${key}: ${param}`, 6));
 
       this.set({ [key]: param[0] });
       return this;
@@ -73,12 +85,29 @@ class Point {
     return this.getset("type", args);
   }
 
+  selected(...args) {
+    return this.getset("selected", args);
+  }
+
   x(...args) {
     return this.getset("x", args);
+  }
+  $x() {
+    return {
+      type: "pointRef",
+      data: { id: this.id, attr: "x" },
+    };
   }
 
   y(...args) {
     return this.getset("y", args);
+  }
+
+  $y() {
+    return {
+      type: "pointRef",
+      data: { id: this.id, attr: "y" },
+    };
   }
 
   id(id) {
@@ -100,9 +129,9 @@ class Point {
     this.store.points.reducer("POINT_MOVE", {
       id: this.data.get("id"),
       x,
-      y
+      y,
     });
-
+    this.update();
     return this;
   }
 
@@ -114,9 +143,10 @@ class Point {
     this.store.points.reducer("POINT_SCALE", {
       id: this.data.get("id"),
       x,
-      y
+      y,
     });
 
+    this.update();
     return this;
   }
 

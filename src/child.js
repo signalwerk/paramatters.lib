@@ -38,14 +38,22 @@ class Child {
   }
 
   push(item) {
-    const contourStore = this.store.merge(item.store);
+    const itemId = item.id;
 
-    item.setStore(contourStore);
+    item.register(() => this.parent.emit());
 
-    contourStore.contours.reducer("CONTOUR_PUSH_POINT", {
-      id: this.data.get("id"),
-      pointId: item.id()
+    this.store.points.reducer("POINT_ADD", item.store.points.get(itemId));
+
+    this.store.contours.reducer("CONTOUR_PUSH_POINT", {
+      id: this.parent.id,
+      pointId: itemId
     });
+
+    item.setStore(this.store);
+
+    this.parent.update();
+
+    return this;
   }
 
   // constructor(parent, id) {

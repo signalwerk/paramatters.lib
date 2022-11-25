@@ -23,25 +23,21 @@ class PointStore {
     const newPoint = defaultPoint(id).merge(load);
 
     this.set(newPoint.get("id"), newPoint);
-    this.store().emit(newPoint.get("id"), newPoint);
   }
 
   attrPoint(id, attr) {
     const newPoint = setAttr(this.get(id), attr);
     this.set(id, newPoint);
-    this.store().emit(id, newPoint);
   }
 
   movePoint(id, x, y) {
     const newPoint = move(this.get(id), x, y);
     this.set(id, newPoint);
-    this.store().emit(id, newPoint);
   }
 
   scalePoint(id, x, y) {
     const newPoint = scale(this.get(id), x, y);
     this.set(id, newPoint);
-    this.store().emit(id, newPoint);
   }
 
   reducer(action, load) {
@@ -63,7 +59,7 @@ class PointStore {
         break;
 
       default: {
-        console.log("no default");
+        console.error("no default");
       }
     }
   }

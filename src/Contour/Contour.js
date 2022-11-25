@@ -1,60 +1,68 @@
 import { Map } from "immutable";
 import Store from "../Store";
 import { uuid } from "../uuid";
-import Child from "../child";
+import { isObject, pick } from "../util";
+import ArrayObserve from "../arrayObserve";
 import log from "../log";
-import Point from "../Point/Point";
+
+const attr = ["closed"];
 
 class Contour {
   constructor(...args) {
     this.store = new Store();
     this.data = null;
+    this.events = [];
 
-    let id = null;
-    let argNew = null;
+    let argNew = Map();
 
-    if (args.length <= 1) {
-      argNew = Map(args[0]);
-      if (argNew.get("forceId") === true) {
-        id = argNew.get("id");
-      } else {
-        id = uuid();
+    if (args.length === 1 && isObject(args[0])) {
+      argNew = argNew.merge(pick(args[0], attr));
+
+      if (args[0] && args[0].forceId && args[0].id) {
+        argNew = argNew.merge({ id: args[0].id });
       }
     }
 
-    this.store.register(id, newData => this.onChange(newData));
+    if (!argNew.get("id")) {
+      argNew = argNew.merge({ id: uuid() });
+    }
 
-    this.points = new Child({
-      parent: this,
-      parentType: "contour",
-      memeberType: "point",
-      getter: () => this.data.get("points"),
-      create: attr => new Point(attr.merge({ forceId: true }))
-    });
-
-    this.init(argNew.merge({ id }));
+    this.init(argNew);
+    this.initPoints();
+    this.id = argNew.get("id");
+    this.update();
 
     return this;
+  }
+
+  register(cb) {
+    this.events.push(cb);
+  }
+
+  emit(...args) {
+    this.events.map((item) => item.apply(this, args));
   }
 
   init(args) {
     this.store.contours.reducer("CONTOUR_ADD", {
       id: args.get("id"),
-      attr: args
+      attr: args,
     });
   }
 
-  onChange(newData) {
-    log.cyan(`contour - onChange - Store ${this.store.data.get("id")}`);
-    log.white(log.json(newData, 6));
-    this.data = newData; // resolve(newData, this.store);
+  update(newData) {
+    log.action(`contour - update - Store ${this.store.data.get("id")}`);
+    this.data = this.store.contours.get(this.id);
+    log.data(log.json(this.data, 6));
+    this.emit(this);
   }
 
   set(obj) {
     this.store.contours.reducer("CONTOUR_ATTR", {
-      id: this.data.get("id"),
-      attr: obj
+      id: this.id,
+      attr: obj,
     });
+    this.update();
   }
 
   getset(key, param) {
@@ -68,6 +76,11 @@ class Contour {
   // get/set methods
   closed(...args) {
     return this.getset("closed", args);
+  }
+
+  close() {
+    this.set({ closed: true });
+    return this;
   }
 
   id(id) {
@@ -92,13 +105,19 @@ class Contour {
     return this.store.resolve(this.data).toJS();
   }
 
-    resolve() {
-      return this.store.resolve(this.data);
-    }
+  resolve() {
+    // console.log("resolve", this.data);
+    return this.store.resolve(this.data);
+  }
 
   // copy a point without the events
   clone() {
     return new Contour(this.data);
+  }
+
+  initPoints() {
+    this._points = [];
+    this.points = new Proxy(this._points, ArrayObserve(this));
   }
 }
 
