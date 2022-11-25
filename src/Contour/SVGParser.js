@@ -1,5 +1,6 @@
 // https://github.com/Pomax/js-svg-path/blob/master/svg-parser.js
 // keys https://github.com/jxnblk/path-ast/blob/master/lib/keys.js
+// https://github.com/Hopding/pdf-lib/blob/master/src/api/svgPath.ts
 
 // https://www.w3.org/TR/SVG/paths.html
 
